@@ -92,6 +92,8 @@ def matchHist(imref, im, maskref=np.ones(0, dtype=bool), mask=np.ones(0, dtype=b
         
         # extract masked pixels, if masks are provided. Otherwise, use all 
         # pixels flattening the channel
+        print("maskref" + maskref.shape)
+        print("chanref" + chanref.shape)
         if len(maskref) > 0:
             chanref_flat = chanref[maskref]
         else:
