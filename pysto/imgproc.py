@@ -6,7 +6,7 @@
 @author: Ramon Casero <rcasero@gmail.com>
 @copyright: © 2017 University of Oxford
 @license: GPL v3
-@version: 1.0.0
+@version: 1.0.1
 
 University of Oxford means the Chancellor, Masters and Scholars of
 the University of Oxford, having an administrative office at
@@ -82,6 +82,12 @@ def matchHist(imref, im, maskref=np.ones(0, dtype=bool), mask=np.ones(0, dtype=b
         imrefaux = imrefaux[:,:,np.newaxis]
     if len(imout.shape) < 3:
         imout = imout[:,:,np.newaxis]
+    
+    # masks must have the same [rows,cols] as the corresponding image
+    if (len(maskref) > 0) & (maskref.shape != imref.shape[0:2]):
+        raise ValueError('maskref must have the same [rows,col] as imref')
+    if (len(mask) > 0) & (mask.shape != im.shape[0:2]):
+        raise ValueError('mask must have the same [rows,col] as im')
     
     # compute histogram of each channel of the reference and converted images
     for i in range(0, imrefaux.shape[2]):
