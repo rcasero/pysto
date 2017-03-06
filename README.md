@@ -3,3 +3,26 @@
 Some image processing python functions.
 
 From "pisto manchego", a messy Spanish dish made of tomatoes, onions, courgettes, green and red peppers and olive oil.
+
+# Install
+
+1. Install python environment
+
+        sudo apt-get install python3 python3-dev pip3 spyder3
+
+1. Clone the project
+
+        git clone https://github.com/rcasero/pysto.git
+
+1. Install the pysto package for your local user
+
+        cd pysto
+        sudo pip3 install . --user
+        
+# Uninstall
+
+1. Uninstall the package
+
+       cd pysto
+       sudo pip3 uninstall pysto
+       
