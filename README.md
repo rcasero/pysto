@@ -26,3 +26,12 @@ From "pisto manchego", a messy Spanish dish made of tomatoes, onions, courgettes
        cd pysto
        sudo pip3 uninstall pysto
        
+# Use
+
+1. In your python file, import the module you want to use (currently, only `imgproc` available), possibly giving it a shorthand
+
+       import pysto.imgproc as pysimg
+       
+1. Then, you can call the function
+
+       im_matched = pysimg.matchHist(imref, im, maskref=maskref, mask=mask)
