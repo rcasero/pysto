@@ -1,9 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 """
-imgproc/matchHist.py
+@file: imgproc.py
 @package: pysto
-@subpackage: imgproc
 @author: Ramon Casero <rcasero@gmail.com>
 @copyright: © 2017 University of Oxford
 @license: GPL v3
@@ -148,10 +147,10 @@ if __name__ == "__main__":
     module_path = os.path.dirname(os.path.realpath(__file__))
     
     # path and name of test files
-    imref_name = os.path.join(module_path, ".." + os.sep + "testdata", "right.png")
-    im_name = os.path.join(module_path, ".." + os.sep + "testdata", "left.png")
-    maskref_name = os.path.join(module_path, ".." + os.sep + "testdata", "right_mask.png")
-    mask_name = os.path.join(module_path, ".." + os.sep + "testdata", "left_mask.png")
+    imref_name = os.path.join(module_path, "testdata", "right.png")
+    im_name = os.path.join(module_path, "testdata", "left.png")
+    maskref_name = os.path.join(module_path, "testdata", "right_mask.png")
+    mask_name = os.path.join(module_path, "testdata", "left_mask.png")
 
     # read test images and their masks
     imref = misc.imread(imref_name)
