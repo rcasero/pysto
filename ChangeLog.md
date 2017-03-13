@@ -8,7 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - imgproc.matchHist(): "Modify image intensities to match the
-  histogram of a reference image" by [rcasero](https://github.com/rcasero)
-- imgproc.imfuse(): "Composite of two images" by [rcasero](https://github.com/rcasero)
+  histogram of a reference image" by
+  [rcasero](https://github.com/rcasero)
+- imgproc.imfuse(): "Composite of two images" by
+  [rcasero](https://github.com/rcasero)
 - testdata/*.png: Stereo cloud images with ROI masks (left_mask.png,
-  left.png, right_mask.png, right.png) by [rcasero](https://github.com/rcasero)
+  left.png, right_mask.png, right.png) by
+  [rcasero](https://github.com/rcasero)
