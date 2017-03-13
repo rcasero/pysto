@@ -17,7 +17,7 @@ From "pisto manchego", a messy Spanish dish made of tomatoes, onions, courgettes
 1. Install the pysto package for your local user
 
         cd pysto
-        sudo pip3 install . --user
+        pip3 install . --user
         
 # Uninstall
 
