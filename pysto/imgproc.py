@@ -33,7 +33,28 @@ along with this program.  If not, see
 <http://www.gnu.org/licenses/>.
 """
 
+###############################################################################
+## Summary of functions in this module:
+##
+##   matchHist: 
+##      Modify image intensities to match the histogram of a reference image.
+##
+##   imfuse: 
+##      Composite of two images.
+##
+###############################################################################
+## Summary of test functions:
+##
+##   test_matchHist
+##   test_imfuse
+###############################################################################
+
+
 import numpy as np
+
+###############################################################################
+## matchHist
+###############################################################################
 
 def matchHist(imref, im, maskref=np.ones(0, dtype=bool), mask=np.ones(0, dtype=bool), nbr_bins=256):
     """Modify image intensities to match the histogram of a reference image.
@@ -98,8 +119,6 @@ def matchHist(imref, im, maskref=np.ones(0, dtype=bool), mask=np.ones(0, dtype=b
         
         # extract masked pixels, if masks are provided. Otherwise, use all 
         # pixels flattening the channel
-        print("maskref" + maskref.shape)
-        print("chanref" + chanref.shape)
         if len(maskref) > 0:
             chanref_flat = chanref[maskref]
         else:
@@ -138,13 +157,11 @@ def matchHist(imref, im, maskref=np.ones(0, dtype=bool), mask=np.ones(0, dtype=b
     # return corrected image
     return imout
     
-      
 ###############################################################################
-## TEST
-###############################################################################
-
-# if module is executed as scrip instead of imported, run test    
-if __name__ == "__main__":
+    
+def test_matchHist():
+    """Test function for matchHist()
+    """
 
     import os 
     from scipy import misc
@@ -196,4 +213,89 @@ if __name__ == "__main__":
     ax[1, 1].set_title("Mask of corrected image")
 
     plt.show()
+
+      
+###############################################################################
+## imfuse
+###############################################################################
+
+def imfuse(a, b):
+    """Composite of two images.
+    
+    Create a false-colour RGB image that combines two input images. This is
+    useful to visually assess the overlapping of two images.
+    
+    C = imfuse(A, B)
+    
+    Args:
+        A, B: Two input images, of any size, grayscale or RGB.
+        
+    Returns:
+        C: Output image. It is built by converting A,B to grayscale, if 
+        necessary. Then, the RGB channels of C are set as C=(B,A,B)
+    """
+    
+    # convert to grayscale if colour images
+    if (len(a.shape)>2):
+        a = cv2.cvtColor(a, cv2.COLOR_RGB2GRAY)
+    if (len(b.shape)>2):
+        b = cv2.cvtColor(b, cv2.COLOR_RGB2GRAY)
+    
+    # get size of image that contains both images
+    sz = np.maximum(a.shape, b.shape)
+    
+    # zero-padding of images, if necessary, so that they match the output
+    a = np.lib.pad(a, ((0, sz[0]-a.shape[0]), (0, sz[1]-a.shape[1])), 'constant')
+    b = np.lib.pad(b, ((0, sz[0]-b.shape[0]), (0, sz[1]-b.shape[1])), 'constant')
+
+    # the output fused image 
+    return np.dstack((b, a, b))
+
+###############################################################################
+
+def test_imfuse():
+    """Test function for imfuse()
+    """
+
+    import os    
+    import matplotlib.pyplot as plt
+    from scipy import misc
+    
+    # directory where this module lives    
+    module_path = os.path.dirname(os.path.realpath(__file__))
+    
+    # path and name of test files
+    im1_name = os.path.join(module_path, "testdata", "left.png")
+    im2_name = os.path.join(module_path, "testdata", "right.png")
+    
+    # read test images and their masks
+    im1 = misc.imread(im1_name)
+    im2 = misc.imread(im2_name)
+    
+    # fuse images
+    imf = imfuse(im1, im2)
+    
+    # plot images
+    plt.close('all')
+    plt.subplot(221)
+    plt.imshow(im1)
+    plt.title("Left image")
+    plt.subplot(222)
+    plt.imshow(im2)
+    plt.title("Right image")
+    plt.subplot(212)
+    plt.imshow(imf)
+    plt.title("imfuse")
+    plt.show()
+    
+
+###############################################################################
+## Test block
+###############################################################################
+
+# if module is executed as scrip instead of imported, run test    
+if __name__ == "__main__":
+
+    test_matchHist()
+    test_imfuse()
     
