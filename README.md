@@ -58,17 +58,17 @@ pysto modules, python dependencies and development tools
 have to reinstall the modules to check every change. Instead, add the
 project source directory to the `PYTHONPATH`
 
-	export PYTHONPATH=~/Software/pysto:$PYTHONPATH
+       export PYTHONPATH=~/Software/pysto:$PYTHONPATH
 
 1. Launch the development IDE, e.g.
 
-	spyder&
+       spyder&
 
 1. In your code, import the pysto modules/functions as e.g.
 
-	import pysto.imgproc as pymg
-        [...]
-	imf = pymg.imfuse(im1, im2)
+       import pysto.imgproc as pymg        
+       [...]
+       imf = pymg.imfuse(im1, im2)
         
 ## Uninstalling pysto
 
