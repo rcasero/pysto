@@ -10,7 +10,7 @@ setup(
     python_requires='>=3.6',
     install_requires=['matplotlib>=2.0','numpy>=1.13','opencv-python>=3.3.0'],
     
-    description='Miscellanea image processing functions',
+    description='Miscellaneous image processing functions',
     url='https://github.com/rcasero/pysto',
     download_url = 'https://github.com/rcasero/pysto/archive/1.0.0.tar.gz',
     author='Ramón Casero',
