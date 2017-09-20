@@ -1,16 +1,12 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 """
-@file: imgproc.py
+@file: pysto/pysto/imgproc.py
 @package: pysto
-@author: Ramon Casero <rcasero@gmail.com>
-@copyright: © 2017 University of Oxford
+@author: Ramón Casero <rcasero@gmail.com>
+@copyright: (C) 2017  Ramón Casero <rcasero@gmail.com>
 @license: GPL v3
-@version: 1.0.1
-
-University of Oxford means the Chancellor, Masters and Scholars of
-the University of Oxford, having an administrative office at
-Wellington Square, Oxford OX1 2JD, UK. 
+@version: 1.0.2
 
 This file is part of pysto.
 
@@ -49,6 +45,7 @@ along with this program.  If not, see
 
 import numpy as np
 import cv2
+
 
 ###############################################################################
 ## imfuse
