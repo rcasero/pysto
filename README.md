@@ -1,10 +1,16 @@
-# pysto
+# Summary
 
-Some image processing python functions.
+`pysto` are a few miscellaneous processing python functions.
 
 The name is a play of words on "pisto", a Manchego dish made of tomatoes, onions, courgettes, green and red peppers and olive oil.
 
 # User instructions
+
+## Installing pysto with pip
+
+1. Simply run from your local environment or whole system
+
+        pip install pysto
 
 ## Installing pysto from the cloned github repository
 
