@@ -36,16 +36,55 @@ along with this program.  If not, see
 ###############################################################################
 ## Summary of functions in this module:
 ##
-##   matchHist: 
-##      Modify image intensities to match the histogram of a reference image.
+##   block_split(x, nblocks):
+##      Split an nd-array into blocks.
 ##
 ##   imfuse: 
 ##      Composite of two images.
+##
+##   matchHist: 
+##      Modify image intensities to match the histogram of a reference image.
 ##
 ###############################################################################
 
 import numpy as np
 import cv2
+
+###############################################################################
+## imfuse
+###############################################################################
+
+def imfuse(a, b):
+    """Composite of two images.
+    
+    Create a false-colour RGB image that combines two input images. This is
+    useful to visually assess the overlapping of two images.
+    
+    C = imfuse(A, B)
+    
+    Args:
+        A, B: Two input images, of any size, grayscale or RGB.
+        
+    Returns:
+        C: Output image. It is built by converting A,B to grayscale, if 
+        necessary. Then, the RGB channels of C are set as C=(B,A,B)
+    """
+    
+    # convert to grayscale if colour images
+    if (len(a.shape)>2):
+        a = cv2.cvtColor(a, cv2.COLOR_RGB2GRAY)
+    if (len(b.shape)>2):
+        b = cv2.cvtColor(b, cv2.COLOR_RGB2GRAY)
+    
+    # get size of image that contains both images
+    sz = np.maximum(a.shape, b.shape)
+    
+    # zero-padding of images, if necessary, so that they match the output
+    a = np.lib.pad(a, ((0, sz[0]-a.shape[0]), (0, sz[1]-a.shape[1])), 'constant')
+    b = np.lib.pad(b, ((0, sz[0]-b.shape[0]), (0, sz[1]-b.shape[1])), 'constant')
+
+    # the output fused image 
+    return np.dstack((b, a, b))
 
 ###############################################################################
 ## matchHist
@@ -152,38 +191,3 @@ def matchHist(imref, im, maskref=np.ones(0, dtype=bool), mask=np.ones(0, dtype=b
     # return corrected image
     return imout
     
-###############################################################################
-## imfuse
-###############################################################################
-
-def imfuse(a, b):
-    """Composite of two images.
-    
-    Create a false-colour RGB image that combines two input images. This is
-    useful to visually assess the overlapping of two images.
-    
-    C = imfuse(A, B)
-    
-    Args:
-        A, B: Two input images, of any size, grayscale or RGB.
-        
-    Returns:
-        C: Output image. It is built by converting A,B to grayscale, if 
-        necessary. Then, the RGB channels of C are set as C=(B,A,B)
-    """
-    
-    # convert to grayscale if colour images
-    if (len(a.shape)>2):
-        a = cv2.cvtColor(a, cv2.COLOR_RGB2GRAY)
-    if (len(b.shape)>2):
-        b = cv2.cvtColor(b, cv2.COLOR_RGB2GRAY)
-    
-    # get size of image that contains both images
-    sz = np.maximum(a.shape, b.shape)
-    
-    # zero-padding of images, if necessary, so that they match the output
-    a = np.lib.pad(a, ((0, sz[0]-a.shape[0]), (0, sz[1]-a.shape[1])), 'constant')
-    b = np.lib.pad(b, ((0, sz[0]-b.shape[0]), (0, sz[1]-b.shape[1])), 'constant')
-
-    # the output fused image 
-    return np.dstack((b, a, b))
