@@ -139,10 +139,22 @@ new download URL, etc.. For example,
 
        chmod 600 ~/.pypirc
 
+1. Create a source distribution and a wheel (built package)
+
+       python setup.py sdist bdist_wheel
+
 1. Upload your package to PyPI Test
 
-       python setup.py sdist upload -r pypitest
+       twine upload --repository testpypi dist/*
+
+1. You should be able to see your package in
+
+       https://test.pypi.org/project/pysto/
 
 1. If everything goes well, upload to PyPI Live
 
-       python setup.py sdist upload -r pypi
+       twine upload --repository pypi dist/*
+
+1. You should be able to see your package in
+
+       https://pypi.python.org/pypi
