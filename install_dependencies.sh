@@ -55,3 +55,4 @@ pip install .
 # install development tools
 tput setaf 1; echo "** Install development tools in local environment"; tput sgr0
 conda install -y spyder pytest
+pip install twine wheel setuptools --upgrade
