@@ -46,6 +46,37 @@ along with this program.  If not, see
 import numpy as np
 import cv2
 
+###############################################################################
+## block_split
+###############################################################################
+
+def block_split(x, nblocks):
+    """Split an nd-array into blocks.
+    
+    Split an N-dimensional array into N-dimensional blocks. The split can be 
+    done by slicing (this way processing of a block modifies the corresponding 
+    elements in the full array) or copy (no connection to full array).
+    
+    b = block_split(x, nblocks)
+    
+    Args:
+        x: nd-array.
+        
+        nblocks: list of the same length as x.shape, with the number of blocks 
+        to create in each dimension.
+        
+    Returns:
+        b: list of blocks.
+    """
+    
+    if (len(nblocks) != len(x.shape)):
+        raise Exception('nblocks must have one element per dimension in x')
+
+    # block size in each dimension to produce the required number of blocks
+    sz = np.ceil(np.divide(x.shape, nblocks))
+    
+    # loop extracting blocks
+    
 
 ###############################################################################
 ## imfuse
