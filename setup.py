@@ -10,6 +10,7 @@ setup(
     
     description='Miscellanea image processing functions',
     url='https://github.com/rcasero/pysto',
+    download_url = 'https://github.com/rcasero/pysto/archive/1.0.0.tar.gz',
     author='Ramón Casero',
     author_email='rcasero@gmail.com',
     license='GPL v3',
