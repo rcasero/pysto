@@ -5,8 +5,8 @@ setup(
     version='0.1',
     packages=find_packages(),
 
-    python_requires='>=3.5',
-    install_requires=['matplotlib>=1.5','numpy>=1.11','scipy>=0.17'],
+    python_requires='>=3.6',
+    install_requires=['matplotlib>=2.0','numpy>=1.13','opencv-python>=3.3.0'],
     
     description='Pysto image processing functions',
     url='https://github.com/rcasero/pysto',

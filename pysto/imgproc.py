@@ -43,14 +43,9 @@ along with this program.  If not, see
 ##      Composite of two images.
 ##
 ###############################################################################
-## Summary of test functions:
-##
-##   test_matchHist
-##   test_imfuse
-###############################################################################
-
 
 import numpy as np
+import cv2
 
 ###############################################################################
 ## matchHist
@@ -158,64 +153,6 @@ def matchHist(imref, im, maskref=np.ones(0, dtype=bool), mask=np.ones(0, dtype=b
     return imout
     
 ###############################################################################
-    
-def test_matchHist():
-    """Test function for matchHist()
-    """
-
-    import os 
-    from scipy import misc
-
-    import matplotlib.pyplot as plt
-
-    # directory where this module lives    
-    module_path = os.path.dirname(os.path.realpath(__file__))
-    
-    # path and name of test files
-    imref_name = os.path.join(module_path, "testdata", "right.png")
-    im_name = os.path.join(module_path, "testdata", "left.png")
-    maskref_name = os.path.join(module_path, "testdata", "right_mask.png")
-    mask_name = os.path.join(module_path, "testdata", "left_mask.png")
-
-    # read test images and their masks
-    imref = misc.imread(imref_name)
-    im = misc.imread(im_name)
-    maskref = misc.imread(maskref_name)
-    mask = misc.imread(mask_name)
-    maskref = maskref[:, :, 1]==255
-    mask = mask[:, :, 1]==255
-
-    # plot images
-    plt.close('all')
-    fig, ax = plt.subplots(2, 2)
-    ax[0, 0].imshow(imref)
-    ax[0, 0].set_title("Ref image")
-    ax[1, 0].imshow(im)
-    ax[1, 0].set_title("Image to be corrected")
-    ax[0, 1].imshow(maskref)
-    ax[0, 1].set_title("Ref mask")
-    ax[1, 1].imshow(mask)
-    ax[1, 1].set_title("Mask of image to be corrected")
- 
-    # match histogram of im to imref, only taking into account the pixels==1 in
-    # the masks
-    im_matched = matchHist(imref, im, maskref=maskref, mask=mask)
-    
-    # plot images
-    fig, ax = plt.subplots(2, 2)
-    ax[0, 0].imshow(imref)
-    ax[0, 0].set_title("Ref image")
-    ax[1, 0].imshow(im_matched)
-    ax[1, 0].set_title("Corrected image")
-    ax[0, 1].imshow(maskref)
-    ax[0, 1].set_title("Ref mask")
-    ax[1, 1].imshow(mask)
-    ax[1, 1].set_title("Mask of corrected image")
-
-    plt.show()
-
-      
-###############################################################################
 ## imfuse
 ###############################################################################
 
@@ -250,52 +187,3 @@ def imfuse(a, b):
 
     # the output fused image 
     return np.dstack((b, a, b))
-
-###############################################################################
-
-def test_imfuse():
-    """Test function for imfuse()
-    """
-
-    import os    
-    import matplotlib.pyplot as plt
-    from scipy import misc
-    
-    # directory where this module lives    
-    module_path = os.path.dirname(os.path.realpath(__file__))
-    
-    # path and name of test files
-    im1_name = os.path.join(module_path, "testdata", "left.png")
-    im2_name = os.path.join(module_path, "testdata", "right.png")
-    
-    # read test images and their masks
-    im1 = misc.imread(im1_name)
-    im2 = misc.imread(im2_name)
-    
-    # fuse images
-    imf = imfuse(im1, im2)
-    
-    # plot images
-    plt.close('all')
-    plt.subplot(221)
-    plt.imshow(im1)
-    plt.title("Left image")
-    plt.subplot(222)
-    plt.imshow(im2)
-    plt.title("Right image")
-    plt.subplot(212)
-    plt.imshow(imf)
-    plt.title("imfuse")
-    plt.show()
-    
-
-###############################################################################
-## Test block
-###############################################################################
-
-# if module is executed as scrip instead of imported, run test    
-if __name__ == "__main__":
-
-    test_matchHist()
-    test_imfuse()
-    
