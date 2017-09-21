@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pysto',
-    version='1.1.0',
+    version='1.1.1',
     packages=find_packages(),
 
     python_requires='>=3.6',
@@ -12,7 +12,7 @@ setup(
     
     description='Miscellaneous image processing functions',
     url='https://github.com/rcasero/pysto',
-    download_url = 'https://github.com/rcasero/pysto/archive/1.1.0.tar.gz',
+    download_url = 'https://github.com/rcasero/pysto/archive/1.1.1.tar.gz',
     author='Ramón Casero',
     author_email='rcasero@gmail.com',
     license='GPL v3',
