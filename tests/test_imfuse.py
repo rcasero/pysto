@@ -6,7 +6,7 @@
 @author: Ramón Casero <rcasero@gmail.com>
 @copyright: (C) 2017  Ramón Casero <rcasero@gmail.com>
 @license: GPL v3
-@version: 0.1.0
+@version: 0.1.1
 
 This file is part of pysto.
 
@@ -36,7 +36,7 @@ import cv2
 
 # root and test data directories for pysto
 root_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..'))
-data_path = os.path.join(root_path, 'test', 'data')
+data_path = os.path.join(root_path, 'tests', 'data')
     
 def test_imfuse():
     """Test function for imfuse()
