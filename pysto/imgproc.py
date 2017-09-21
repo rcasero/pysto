@@ -6,7 +6,7 @@
 @author: Ramón Casero <rcasero@gmail.com>
 @copyright: (C) 2017  Ramón Casero <rcasero@gmail.com>
 @license: GPL v3
-@version: 1.1.0
+@version: 1.1.1
 
 This file is part of pysto.
 
@@ -91,7 +91,7 @@ def block_split(x, nblocks):
     ndims = len(x.shape)
 
     # block size in each dimension to produce the required number of blocks
-    block_shape = np.ceil(np.divide(x.shape, nblocks))
+    block_shape = np.ceil(np.true_divide(x.shape, nblocks))
     block_shape = list(block_shape.astype(int))
     
     # list of lists. idx_start = [[0, 5, 10], [0, 2, 4], [0, 2]]
