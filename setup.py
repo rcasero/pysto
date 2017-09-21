@@ -5,11 +5,14 @@ from setuptools import setup, find_packages
 setup(
     name='pysto',
     version='1.1.2',
+    download_url = 'https://github.com/rcasero/pysto/archive/1.1.2.tar.gz',
     packages=find_packages(),
-
     python_requires='>=3.6',
-    install_requires=['matplotlib>=2.0','numpy>=1.13','opencv-python>=3.3.0'],
-
+    install_requires=[
+        'matplotlib>=2.0',
+        'numpy>=1.13',
+        'opencv-python>=3.3.0',
+    ],
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
     # for example:
@@ -18,14 +21,11 @@ setup(
         'dev': ['spyder', 'twine', 'wheel', 'setuptools'],
         'test': ['pytest'],
     },
-    
     description='Miscellaneous image processing functions',
     url='https://github.com/rcasero/pysto',
-    download_url = 'https://github.com/rcasero/pysto/archive/1.1.2.tar.gz',
     author='Ramón Casero',
     author_email='rcasero@gmail.com',
     license='GPL v3',
-
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Science/Research',
@@ -33,6 +33,5 @@ setup(
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Programming Language :: Python :: 3.6',
     ],
-
-    keywords='image processing bioinformatics',
+    keywords=['image processing', 'bioinformatics'],
 )
