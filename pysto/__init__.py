@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
 @file: pysto/__init__.py
 @package: pysto
