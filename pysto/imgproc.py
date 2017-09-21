@@ -6,7 +6,7 @@
 @author: Ramón Casero <rcasero@gmail.com>
 @copyright: (C) 2017  Ramón Casero <rcasero@gmail.com>
 @license: GPL v3
-@version: 1.0.2
+@version: 1.1.0
 
 This file is part of pysto.
 
@@ -45,6 +45,7 @@ along with this program.  If not, see
 
 import numpy as np
 import cv2
+import itertools
 
 ###############################################################################
 ## block_split
@@ -53,30 +54,86 @@ import cv2
 def block_split(x, nblocks):
     """Split an nd-array into blocks.
     
-    Split an N-dimensional array into N-dimensional blocks. The split can be 
-    done by slicing (this way processing of a block modifies the corresponding 
-    elements in the full array) or copy (no connection to full array).
+    Split an N-dimensional array into blocks. This syntax returns one slice 
+    object per block
     
-    b = block_split(x, nblocks)
+        block_slices, _ = block_split(x, nblocks)
+    
+    so that the i-th block is x[block_slices[i]]. Because slicing works by 
+    reference, you can operate on the block, and the operations are applied to
+    the original array x.
+    
+    For convenience, the function can also output references to the blocks.
+    
+        block_slices, blocks = block_split(x, nblocks)
     
     Args:
-        x: nd-array.
+        x: nd-array (numpy).
         
         nblocks: list of the same length as x.shape, with the number of blocks 
         to create in each dimension.
         
     Returns:
-        b: list of blocks.
+        block_slices: list of slice object. Each slice applied to x produces 
+        the corresponding block.
+        
+        blocks: list of blocks. Each block is a sliced array (a chunk of the 
+        original array).
     """
     
     if (len(nblocks) != len(x.shape)):
         raise Exception('nblocks must have one element per dimension in x')
 
+    if len([i for i, j in zip(nblocks, x.shape) if i > j]) > 0:
+        raise Exception('There cannot be more blocks along a dimension than elements')
+
+    # number of dimensions
+    ndims = len(x.shape)
+
     # block size in each dimension to produce the required number of blocks
-    sz = np.ceil(np.divide(x.shape, nblocks))
+    block_shape = np.ceil(np.divide(x.shape, nblocks))
+    block_shape = list(block_shape.astype(int))
     
-    # loop extracting blocks
+    # list of lists. idx_start = [[0, 5, 10], [0, 2, 4], [0, 2]]
+    # means that dimension=0 blocks start at indices [0,5,10]
+    #            dimension=1 blocks start at indices [0,2,4]
+    #            dimension=2 blocks start at indices [0,2]
+    idx_start = []
+    idx_end = []
+    for d in range(ndims):
+        # first index of each block
+        idx_start += [list(range(0,x.shape[d],block_shape[d]))]
+        # last index of each block if the array were big enough
+        idx_end += [list(np.array(idx_start[d]) + block_shape[d] - 1)]
+        # match the size of the last block to the size of the array
+        idx_end[d][-1] = x.shape[d]-1
     
+    # create indices for each block in the array (we use iterators, but you can
+    # see the indices using e.g. list(idx_start))
+    idx_start = itertools.product(*idx_start)
+    idx_end = itertools.product(*idx_end)
+    
+    # convert to list so that we can provide the block indices at the output 
+    # (otherwise, the iterators get exhausted, and return [])
+    #idx_start = list(idx_start)
+    #idx_end = list(idx_end)
+    
+    # iterate to extract all blocks from array
+    blocks = []
+    block_slices = []
+    for (b_start, b_end) in zip(idx_start, idx_end):
+        
+        # create a slice object per dimension
+        this_block_slice = []
+        for d in range(ndims):
+            this_block_slice += [slice(b_start[d],b_end[d]+1,1)]
+
+        # extract block from array
+        block_slices += [this_block_slice]
+        blocks += [x[this_block_slice]]
+        
+    return block_slices, blocks
+
 
 ###############################################################################
 ## imfuse
