@@ -36,17 +36,40 @@ else
     source ~/.bashrc
 fi
 
-# conda local environment
-if [ -z "$(conda info --envs | sed '/^#/ d' | cut -f1 -d ' ' | grep -w pysto)" ]; then
-    tput setaf 1; echo "** Create conda local environment: pysto"; tput sgr0
-    conda create -y --name pysto python=3
+#################################################################################################
+# conda local environment: for python 2.7
+if [ -z "$(conda info --envs | sed '/^#/ d' | cut -f1 -d ' ' | grep -w pysto_2.7)" ]; then
+    tput setaf 1; echo "** Create conda local environment: pysto_2.7"; tput sgr0
+    conda create -y --name pysto_2.7 python=2.7
 else
-    tput setaf 1; echo "** Conda local environment already exists (...skipping): pysto"; tput sgr0
+    tput setaf 1; echo "** Conda local environment already exists (...skipping): pysto_2.7"; tput sgr0
 fi
 
 # switch to pysto local environment
-tput setaf 1; echo "** Switching to local environment: pysto"; tput sgr0
-source activate pysto
+tput setaf 1; echo "** Switching to local environment: pysto_2.7"; tput sgr0
+source activate pysto_2.7
+
+# install pysto code and dependencies
+tput setaf 1; echo "** Install pysto code and dependencies in local environment"; tput sgr0
+pip install .
+
+# install development tools
+tput setaf 1; echo "** Install development tools in local environment"; tput sgr0
+conda install -y spyder pytest
+pip install twine wheel setuptools --upgrade
+
+#################################################################################################
+# conda local environment: for python 3.6
+if [ -z "$(conda info --envs | sed '/^#/ d' | cut -f1 -d ' ' | grep -w pysto_3.6)" ]; then
+    tput setaf 1; echo "** Create conda local environment: pysto_3.6"; tput sgr0
+    conda create -y --name pysto_3.6 python=3.6
+else
+    tput setaf 1; echo "** Conda local environment already exists (...skipping): pysto_3.6"; tput sgr0
+fi
+
+# switch to pysto local environment
+tput setaf 1; echo "** Switching to local environment: pysto_3.6"; tput sgr0
+source activate pysto_3.6
 
 # install pysto code and dependencies
 tput setaf 1; echo "** Install pysto code and dependencies in local environment"; tput sgr0

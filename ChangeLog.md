@@ -4,13 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v1.1.3
+### Changed
+
+- __init__: Fix bug, missing encoding for file.
+- tests/*.py: Fix bug, typo in directory for data.
+- pysto/improc.py: Fix bug. np.divide in Python 2 is integer division
+- Make compatible and add local environment for python 2.7.
+
 ## v1.1.2
 ### Changed
 
 - setup.py: Improve metainformation.
 
 ## v1.1.1
-### Fix bug
+### Changed
 
 - ChangeLog.md: Update ChangeLog.
 

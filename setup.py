@@ -7,7 +7,7 @@ setup(
     version='1.1.2',
     download_url = 'https://github.com/rcasero/pysto/archive/1.1.2.tar.gz',
     packages=find_packages(),
-    python_requires='>=3.6',
+    python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*',
     install_requires=[
         'matplotlib>=2.0',
         'numpy>=1.13',
