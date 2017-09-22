@@ -51,7 +51,7 @@ import itertools
 ## block_split
 ###############################################################################
 
-def block_split(x, nblocks, by_reference=True, margin=0):
+def block_split(x, nblocks, by_reference=True, *pad_args=None):
     """Split an nd-array into blocks.
     
     Split an N-dimensional array into blocks. This syntax returns one slice 
@@ -70,17 +70,22 @@ def block_split(x, nblocks, by_reference=True, margin=0):
     Args:
         x: nd-array (numpy).
         
-        nblocks: list of the same length as x.shape, with the number of blocks 
+        nblocks: List of the same length as x.shape, with the number of blocks 
         to create in each dimension.
         
-        by_reference: (def True) whether blocks are returns as sliced arrays 
+        by_reference: (def True) Whether blocks are returns as sliced arrays 
         (by reference) or as copies (by value). Changes to blocks by reference 
         apply to the original array. Changes to blocks by value are only local.
         
-        margin: (def 0) added margin (in voxels) around each block. This allows
-        overlap between the blocks. In some image processing methods, this 
-        extra margin is necessary so that the result in the central part of the 
-        block is correct.
+        margin: (def 0) Added margin size (in voxels) around each block. This 
+        allows overlap between the blocks. In some image processing methods, 
+        this extra margin is necessary so that the result in the central part 
+        of the block is correct.
+        
+        border_extrapolation: (def=0) If margin>0, how to create voxels outside
+        the array for border blocks. A scalar value indicates that external 
+        voxels will be set to that value. A string 'mirror' means the array 
+        will be mirrored about the edges to create external voxels.
         
     Returns:
         block_slices: list of slice object. Each slice applied to x produces 
@@ -95,6 +100,9 @@ def block_split(x, nblocks, by_reference=True, margin=0):
 
     if len([i for i, j in zip(nblocks, x.shape) if i > j]) > 0:
         raise Exception('There cannot be more blocks along a dimension than elements')
+        
+    if (by_reference & margin>0):
+        raise Exception('Blocks with margin>0 cannot be returned by reference, because some margins will be outside the array')
 
     # number of dimensions
     ndims = len(x.shape)
@@ -121,11 +129,11 @@ def block_split(x, nblocks, by_reference=True, margin=0):
     # see the indices using e.g. list(idx_start))
     idx_start = itertools.product(*idx_start)
     idx_end = itertools.product(*idx_end)
-    
-    # convert to list so that we can provide the block indices at the output 
-    # (otherwise, the iterators get exhausted, and return [])
-    #idx_start = list(idx_start)
-    #idx_end = list(idx_end)
+
+    # add external margins to the array, if necessary
+    if (margin != 0):
+        if (type(margin) == 'str' & margin == ):
+            
     
     # iterate to extract all blocks from array
     blocks = []
@@ -137,12 +145,19 @@ def block_split(x, nblocks, by_reference=True, margin=0):
         for d in range(ndims):
             this_block_slice += [slice(b_start[d],b_end[d]+1,1)]
 
-        # extract block from array
+        # keep copy of slice for output
         block_slices += [this_block_slice]
+        
+        # extract block from array
         if (by_reference):
-            blocks += [x[this_block_slice]]
+            this_block = x[this_block_slice]
         else:
-            blocks += [np.copy(x[this_block_slice])]
+            this_block = np.copy(x[this_block_slice])
+        
+        # add margins to block
+        
+        # add block to output list
+        blocks += [this_block]
         
     return block_slices, blocks
 
