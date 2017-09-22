@@ -6,7 +6,7 @@
 @author: Ramón Casero <rcasero@gmail.com>
 @copyright: (C) 2017  Ramón Casero <rcasero@gmail.com>
 @license: GPL v3
-@version: 1.0.0
+@version: 1.1.0
 
 This file is part of pysto.
 
@@ -302,7 +302,33 @@ def test_blocks_by_reference():
     blocks[3][...] = 0
     assert((x[3:5, 0:4] == blocks[3]).all())
     
+
+def test_blocks_by_value():
     
+    # create test 2D array
+    R = 5
+    C = 10
+    
+    x = np.array(range(R*C)).reshape(R,C)
+    
+    # array([[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9],
+    #        [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+    #        [20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
+    #        [30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
+    #        [40, 41, 42, 43, 44, 45, 46, 47, 48, 49]])
+    
+    # split into 2,3 blocks
+    block_slices, blocks = pymg.block_split(x, (2,3), by_reference=False)
+    
+    expected_blocks = example_2D_array_blocks()
+    
+    # check that all blocks were computed as expected    
+    for eb, b in zip(expected_blocks, blocks):
+        assert((eb == b).all())
+        
+    # set one block to zeros, and check that the original array has not changed
+    blocks[3][...] = 0
+    assert((x[3:5, 0:4] == expected_blocks[3]).all())
 
 # slice a 3D array into blocks
 def test_3d_array():
@@ -360,3 +386,4 @@ def test_slicing():
     # check that the blocks are the same as the slices of the array
     for i in range(len(blocks)):
         assert((blocks[i] == x[block_slices[i]]).all())
+

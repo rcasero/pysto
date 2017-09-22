@@ -6,7 +6,7 @@
 @author: Ramón Casero <rcasero@gmail.com>
 @copyright: (C) 2017  Ramón Casero <rcasero@gmail.com>
 @license: GPL v3
-@version: 1.1.1
+@version: 1.2.1
 
 This file is part of pysto.
 
@@ -51,7 +51,7 @@ import itertools
 ## block_split
 ###############################################################################
 
-def block_split(x, nblocks):
+def block_split(x, nblocks, by_reference=True, margin=0):
     """Split an nd-array into blocks.
     
     Split an N-dimensional array into blocks. This syntax returns one slice 
@@ -72,6 +72,15 @@ def block_split(x, nblocks):
         
         nblocks: list of the same length as x.shape, with the number of blocks 
         to create in each dimension.
+        
+        by_reference: (def True) whether blocks are returns as sliced arrays 
+        (by reference) or as copies (by value). Changes to blocks by reference 
+        apply to the original array. Changes to blocks by value are only local.
+        
+        margin: (def 0) added margin (in voxels) around each block. This allows
+        overlap between the blocks. In some image processing methods, this 
+        extra margin is necessary so that the result in the central part of the 
+        block is correct.
         
     Returns:
         block_slices: list of slice object. Each slice applied to x produces 
@@ -130,7 +139,10 @@ def block_split(x, nblocks):
 
         # extract block from array
         block_slices += [this_block_slice]
-        blocks += [x[this_block_slice]]
+        if (by_reference):
+            blocks += [x[this_block_slice]]
+        else:
+            blocks += [np.copy(x[this_block_slice])]
         
     return block_slices, blocks
 
