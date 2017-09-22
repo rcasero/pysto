@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## v?.?.?
 ### Added
 
-- 
+- Makefile: Simplify common development tasks (test, package).
 
 ## v1.1.3
 ### Changed
