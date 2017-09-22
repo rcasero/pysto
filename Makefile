@@ -62,13 +62,15 @@ PACKAGE_JSON_URL = https://pypi.python.org/pypi/pysto/json
 
 dist/all_tests_2.7_OK.txt: $(SRCFILES) $(TESTFILES)
 	tput setaf 1; echo "** Testing pysto for python 2.7"; tput sgr0
-	source activate pysto_2.7
-	pytest tests && touch dist/all_tests_2.7_OK.txt
+	source activate pysto_2.7 \
+	&& pytest tests \
+	&& touch dist/all_tests_2.7_OK.txt
 
 dist/all_tests_3.6_OK.txt: $(SRCFILES) $(TESTFILES)
 	tput setaf 1; echo "** Testing pysto for python 3.6"; tput sgr0
-	source activate pysto_3.6
-	pytest tests && touch dist/all_tests_3.6_OK.txt
+	source activate pysto_3.6 \
+	&& pytest tests \
+	&& touch dist/all_tests_3.6_OK.txt
 
 test_2.7: dist/all_tests_2.7_OK.txt
 
