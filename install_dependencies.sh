@@ -20,6 +20,9 @@
 
 #!/bin/bash
 
+# ubuntu packages
+sudo apt-get install -y jq curl
+
 # conda package manager
 if hash conda 2>/dev/null; then
     tput setaf 1; echo "** Conda package manager already installed"; tput sgr0
