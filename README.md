@@ -28,7 +28,7 @@ local conda environment called "myproject"
 installing it system-wide, you may need to run the command as root)
 
         cd pysto
-	pip install .
+        pip install .
 
 ## Uninstalling pysto
 
@@ -49,7 +49,7 @@ python 2.7 and 3.6, and installs python dependencies and development
 tools
 
         cd pysto
-	./install_dependencies.sh
+        ./install_dependencies.sh
 
 ## Developing source code for pysto
 
@@ -164,4 +164,4 @@ new download URL, changes to the description...
 
 1. You should be able to see your package in
 
-      https://pypi.org/project/pysto/
+       https://pypi.org/project/pysto/
