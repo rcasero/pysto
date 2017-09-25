@@ -206,7 +206,7 @@ def test_blocks_by_value():
     #        [30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
     #        [40, 41, 42, 43, 44, 45, 46, 47, 48, 49]])
     
-    # split into 2,3 blocks
+    # split into blocks
     block_slices, blocks, xout = pymg.block_split(x, nblocks=(2,3), by_reference=False)
 
     # check number of blocks
@@ -276,7 +276,7 @@ def test_no_reference_with_padding():
     #        [30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
     #        [40, 41, 42, 43, 44, 45, 46, 47, 48, 49]])
     
-    # split into 2,3 blocks
+    # split into blocks
     try:
         block_slices, blocks, xout = pymg.block_split(x, nblocks=(2,3), pad_width=3, by_reference=True)
     except Exception:
@@ -299,7 +299,7 @@ def test_padding():
     #        [30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
     #        [40, 41, 42, 43, 44, 45, 46, 47, 48, 49]])
     
-    # split into 2,3 blocks
+    # split into blocks
     block_slices, blocks, xout = pymg.block_split(x, nblocks=(1,4), 
                                                   pad_width=(2,3), mode='constant', constant_values=0)
 
