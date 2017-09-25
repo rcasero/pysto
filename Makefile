@@ -103,27 +103,27 @@ check-download-url:
 github-tag:
 	tput setaf 1 && echo "** Creating github tag if necessary" && tput sgr0
 	git fetch --tags
-	LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"` \
-	&& LOCAL_TAG_EXISTS=`git tag | grep -x $$LOCAL_VERSION` \
-	&& if [ -z "$${LOCAL_TAG_EXISTS}" ]; then \
-		echo Creating local tag; \
-		git tag "$$LOCAL_VERSION"; \
+	LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"`; \
+	LOCAL_TAG_EXISTS=`git tag | grep -x "$$LOCAL_VERSION"`; \
+	if [ -z "$${LOCAL_TAG_EXISTS}" ]; then \
+		echo Creating local tag \
+		&& git tag "$$LOCAL_VERSION"; \
 	else \
-		echo Skipping: Local tag already exists; \
-	fi \
-	&& REMOTE_TAG_EXISTS=`git ls-remote --tags origin | grep refs/tags/$$LOCAL_VERSION` \
-	&& if [ -z "$${REMOTE_TAG_EXISTS}" ]; then \
-		echo Pushing tag to remote; \
-		git push origin --tags; \
+		echo "Skipping: Local tag already exists"; \
+	fi; \
+	REMOTE_TAG_EXISTS=`git ls-remote --tags origin | grep refs/tags/"$$LOCAL_VERSION"`; \
+	if [ -z "$${REMOTE_TAG_EXISTS}" ]; then \
+		echo Pushing tag to remote \
+		&& git push origin --tags; \
 	else \
-		echo Skipping: Remote tag already exists; \
-	fi 
+		echo "Skipping: Remote tag already exists"; \
+	fi
 
 package: check-download-url github-tag
 	tput setaf 1 && echo "** Creating release package and uploading to PyPI.org" && tput sgr0 
-	LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"` \
-	&& LOCAL_VERSION_IS_IN_SERVER=`curl -s $(PACKAGE_JSON_URL) | jq  -r '.releases | keys | .[]' | grep $$LOCAL_VERSION` \
-	&& if [ -z $$LOCAL_VERSION_IS_IN_SERVER ]; then \
+	LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"`; \
+	LOCAL_VERSION_IS_IN_SERVER=`curl -s $(PACKAGE_JSON_URL) | jq  -r '.releases | keys | .[]' | grep $$LOCAL_VERSION`; \
+	if [ -z $$LOCAL_VERSION_IS_IN_SERVER ]; then \
 		python setup.py sdist bdist_wheel \
 		&& twine upload --repository pypi dist/*$$LOCAL_VERSION*; \
 	else \
@@ -132,9 +132,9 @@ package: check-download-url github-tag
 
 test-package: check-download-url github-tag
 	tput setaf 1 && echo "** Creating release package and uploading to PyPI.org" && tput sgr0 
-	LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"` \
-	&& LOCAL_VERSION_IS_IN_SERVER=`curl -s $(TEST_PACKAGE_JSON_URL) | jq  -r '.releases | keys | .[]' | grep $$LOCAL_VERSION` \
-	&& if [ -z $$LOCAL_VERSION_IS_IN_SERVER ]; then \
+	LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"`; \
+	LOCAL_VERSION_IS_IN_SERVER=`curl -s $(TEST_PACKAGE_JSON_URL) | jq  -r '.releases | keys | .[]' | grep $$LOCAL_VERSION`; \
+	if [ -z $$LOCAL_VERSION_IS_IN_SERVER ]; then \
 		python setup.py sdist bdist_wheel \
 		&& twine upload --repository pypitest dist/*$$LOCAL_VERSION*; \
 	else \
