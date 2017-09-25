@@ -11,8 +11,11 @@
 #	Run all tests for python 2.7 and 3.6.
 #
 # package:
-#	If no PyPI package with current version exists, create package/wheel
-#       and upload to PyPI.org.
+#	If no pypi.org package with current version exists, create
+#       package/wheel and upload to PyPI.org.
+#
+# test-package:
+#	Same as package, but for the test server testpypi.org.
 #
 # ==============================================================
 # Secondary rules
@@ -57,6 +60,7 @@ TESTFILES = tests/test_block_split.py \
 	tests/test_matchHist.py
 
 PACKAGE_JSON_URL = https://pypi.python.org/pypi/pysto/json
+TEST_PACKAGE_JSON_URL = https://testpypi.python.org/pypi/pysto/json
 
 ## Testing
 
@@ -84,13 +88,12 @@ clean-package:
 	rm -f dist/pysto-*.tar.gz dist/pysto-*-py?-none-any.whl
 
 check-download-url:
-	tput setaf 1 && echo "** Checking download URL" && tput sgr0 \
-	&& LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"` \
+	tput setaf 1 && echo "** Checking download URL" && tput sgr0 
+	LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"` \
 	&& DOWNLOAD_URL_MATCHED_TO_LOCAL=`grep download_url setup.py | grep "/$${LOCAL_VERSION}.tar.gz"` \
 	&& echo "Local version: $$LOCAL_VERSION" \
 	&& echo $$DOWNLOAD_URL_MATCHED_TO_LOCAL \
-	&& if [ -z "$${DOWNLOAD_URL_MATCHED_TO_LOCAL}" ]; \
-	then \
+	&& if [ -z "$${DOWNLOAD_URL_MATCHED_TO_LOCAL}" ]; then \
 		echo Error: download URL does not match local version; \
 		exit 1; \
 	else \
@@ -98,26 +101,43 @@ check-download-url:
 	fi
 
 github-tag:
-	tput setaf 1 && echo "** Creating github tag if necessary" && tput sgr0 \
-	&& LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"` \
-	&& TAG_EXISTS=`git tag | grep -x $$LOCAL_VERSION` \
-	&& if [ -z "$${TAG_EXISTS}" ]; \
-	then \
-		echo Creating tag; \
-		git tag "$$LOCAL_VERSION" \
-		&& git push origin --tags; \
+	tput setaf 1 && echo "** Creating github tag if necessary" && tput sgr0
+	git fetch --tags
+	LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"` \
+	&& LOCAL_TAG_EXISTS=`git tag | grep -x $$LOCAL_VERSION` \
+	&& if [ -z "$${LOCAL_TAG_EXISTS}" ]; then \
+		echo Creating local tag; \
+		git tag "$$LOCAL_VERSION"; \
 	else \
-		echo Skipping: Github tag already exists; \
-	fi
+		echo Skipping: Local tag already exists; \
+	fi \
+	&& REMOTE_TAG_EXISTS=`git ls-remote --tags origin | grep refs/tags/$$LOCAL_VERSION` \
+	&& if [ -z "$${REMOTE_TAG_EXISTS}" ]; then \
+		echo Pushing tag to remote; \
+		git push origin --tags; \
+	else \
+		echo Skipping: Remote tag already exists; \
+	fi 
 
 package: check-download-url github-tag
-	tput setaf 1 && echo "** Creating release package and uploading to PyPI.org" && tput sgr0 \
-	&& LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"` \
+	tput setaf 1 && echo "** Creating release package and uploading to PyPI.org" && tput sgr0 
+	LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"` \
 	&& LOCAL_VERSION_IS_IN_SERVER=`curl -s $(PACKAGE_JSON_URL) | jq  -r '.releases | keys | .[]' | grep $$LOCAL_VERSION` \
-	&& if [ -z $$LOCAL_VERSION_IS_IN_SERVER ]; \
-	then \
+	&& if [ -z $$LOCAL_VERSION_IS_IN_SERVER ]; then \
 		python setup.py sdist bdist_wheel \
-		&& twine upload --repository pypitest dist/*$$LOCAL_VERSION*; \
+		&& twine upload --repository pypi dist/*$$LOCAL_VERSION*; \
 	else \
 		echo "Local version $$LOCAL_VERSION is already on PyPI server"; \
 	fi
+
+test-package: check-download-url github-tag
+	tput setaf 1 && echo "** Creating release package and uploading to PyPI.org" && tput sgr0 
+	LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"` \
+	&& LOCAL_VERSION_IS_IN_SERVER=`curl -s $(TEST_PACKAGE_JSON_URL) | jq  -r '.releases | keys | .[]' | grep $$LOCAL_VERSION` \
+	&& if [ -z $$LOCAL_VERSION_IS_IN_SERVER ]; then \
+		python setup.py sdist bdist_wheel \
+		&& twine upload --repository pypitest dist/*$$LOCAL_VERSION*; \
+	else \
+		echo "Local version $$LOCAL_VERSION is already on PyPI test server"; \
+	fi
+
