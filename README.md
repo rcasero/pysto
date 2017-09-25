@@ -44,25 +44,23 @@ installing it system-wide, you may need to run the command as root)
 
         git clone https://github.com/rcasero/pysto.git
 
-1. Create local environment called `pysto`, and install in it the
-pysto modules, python dependencies and development tools
+1. Run `install_dependencies.sh` so it creates local environments for
+python 2.7 and 3.6, and installs python dependencies and development
+tools
 
         cd pysto
 	./install_dependencies.sh
 
-1. Activate `pysto` local environment
-
-        source activate pysto
-
-1. Run project tests
-
-        pytest tests/
-
 ## Developing source code for pysto
 
-1. If you are making changes to the code, you probably don't want to
-have to reinstall the modules to check every change. Instead, add the
-project source directory to the `PYTHONPATH`
+1. Activate one of the pysto local environments
+
+        source activate pysto_3.6
+
+1. If you are making changes to the code, you want your python
+environment to import the code you are working with in
+`~/Software/pysto`, not the package installed in your local conda
+environment. Thus, add the project's source directory to `PYTHONPATH`
 
        export PYTHONPATH=~/Software/pysto:$PYTHONPATH
 
@@ -70,43 +68,69 @@ project source directory to the `PYTHONPATH`
 
        spyder&
 
-1. In your code, import the pysto modules/functions as e.g.
+1. In your code, import the pysto modules/functions in the usual way, e.g.
 
        import pysto.imgproc as pymg        
        [...]
        imf = pymg.imfuse(im1, im2)
         
+1. While developing, you can run all tests (both for python 2.7 and
+3.6) from the command line with
+
+        make test
+
+1. You need to have a local file `~/.pypirc` (replace `<the password>`
+by the password). This will be used by `twine` to release packages to PyPI
+
+       [distutils]
+       index-servers =
+         pypi
+         pypitest
+       
+       [pypi]
+       username=rcasero
+       password=<the password>
+       
+       [pypitest]
+       repository = https://test.pypi.org/legacy/
+       username=rcasero
+       password=<the password>
+
+1. Protect the file so that it can be read only by you
+
+       chmod 600 ~/.pypirc
+
 ## Uninstalling pysto
 
 1. Uninstall the package
 
        pip uninstall pysto
 
-## Uploading a new release of pysto to PyPI
+## Releasing a new version of pysto to PyPI
 
-(Some instructions derived from Peter Downs' ["How to submit a package
-to PyPI"](http://peterdowns.com/posts/first-time-with-pypi.html).)
+We provide a `Makefile` to simplify testing and releasing.
 
 1. Run tests to make sure nothing obvious got broken
 
-       pytest tests/
+       make test
+
+1. Commit and push all the code that should go in the release to
+github.
 
 1. Update `setup.py` with release version, any new dependencies, the
-new download URL, etc.. For example,
+new download URL, changes to the description...
 
        from setuptools import setup, find_packages
        
        setup(
            name='pysto',
            version='1.0.0',
+           download_url = 'https://github.com/rcasero/pysto/archive/1.0.0.tar.gz',
            packages=find_packages(),
-       
            python_requires='>=3.6',
            install_requires=['matplotlib>=2.0','numpy>=1.13','opencv-python>=3.3.0'],
-           
            description='Miscellanea image processing functions',
            url='https://github.com/rcasero/pysto',
-           download_url = 'https://github.com/rcasero/pysto/archive/1.0.0.tar.gz',
            author='Ramón Casero',
            author_email='rcasero@gmail.com',
            license='GPL v3',
@@ -126,32 +150,9 @@ new download URL, etc.. For example,
          left.png, right_mask.png, right.png) by
          [rcasero](https://github.com/rcasero)
 
-1. You need to have a local file `~/.pypirc` (replace `<the password>` by the password)
+1. Tag the release in github, create the package/wheel and upload to the test PyPI server
 
-       [distutils]
-       index-servers =
-         pypi
-         pypitest
-       
-       [pypi]
-       username=rcasero
-       password=<the password>
-       
-       [pypitest]
-       username=rcasero
-       password=<the password>
-
-1. Protect the file so that it can be read only by you
-
-       chmod 600 ~/.pypirc
-
-1. Create a source distribution and a wheel (built package)
-
-       python setup.py sdist bdist_wheel
-
-1. Upload your package to PyPI Test
-
-       twine upload --repository testpypi dist/*
+       make test-package
 
 1. You should be able to see your package in
 
@@ -159,8 +160,8 @@ new download URL, etc.. For example,
 
 1. If everything goes well, upload to PyPI Live
 
-       twine upload --repository pypi dist/*
+       make package
 
 1. You should be able to see your package in
 
-       https://pypi.python.org/pypi
+      https://pypi.org/project/pysto/
