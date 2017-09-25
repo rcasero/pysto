@@ -6,7 +6,7 @@
 @author: Ramón Casero <rcasero@gmail.com>
 @copyright: (C) 2017  Ramón Casero <rcasero@gmail.com>
 @license: GPL v3
-@version: 1.2.1
+@version: 1.3.0
 
 This file is part of pysto.
 
@@ -32,7 +32,7 @@ along with this program.  If not, see
 ###############################################################################
 ## Summary of functions in this module:
 ##
-##   block_split(x, nblocks):
+##   block_split:
 ##      Split an nd-array into blocks.
 ##
 ##   imfuse: 
@@ -51,89 +51,114 @@ import itertools
 ## block_split
 ###############################################################################
 
-def block_split(x, nblocks, by_reference=True, *pad_args=None):
+def block_split(x, nblocks, by_reference=False, pad_width=0, mode='constant', **kwargs):
     """Split an nd-array into blocks.
     
     Split an N-dimensional array into blocks. This syntax returns one slice 
     object per block
     
-        block_slices, _ = block_split(x, nblocks)
+        block_slices, blocks, xout = block_split(x, nblocks)
     
-    so that the i-th block is x[block_slices[i]]. Because slicing works by 
-    reference, you can operate on the block, and the operations are applied to
-    the original array x.
-    
-    For convenience, the function can also output references to the blocks.
-    
-        block_slices, blocks = block_split(x, nblocks)
+    so that blocks[i]=xout[block_slices[i]]. If the array length is not a
+    multiple of the block length, one block will have a slightly different size
+    as the others, as decided by numpy.array_split().
     
     Args:
         x: nd-array (numpy).
         
-        nblocks: List of the same length as x.shape, with the number of blocks 
-        to create in each dimension.
+        nblocks: Scalar or list of the same length as x.shape, with the number 
+        of blocks to create in each dimension. If nblocks is a scalar, then 
+        that scalar applies to all dimensions. The number of blocks cannot be
+        larger than the number of elements in the corresponding dimension.
         
-        by_reference: (def True) Whether blocks are returns as sliced arrays 
-        (by reference) or as copies (by value). Changes to blocks by reference 
-        apply to the original array. Changes to blocks by value are only local.
+        by_reference: (def False) Whether blocks are returns as sliced arrays 
+        (by reference) or as copies of the slice array (by value). Changes to 
+        blocks by reference apply to the original array. Changes to blocks by 
+        value are only local.
+        For blocks with padding, by_reference must be False, as otherwise 
+        border blocks would point outside the memory region of the array.
         
-        margin: (def 0) Added margin size (in voxels) around each block. This 
-        allows overlap between the blocks. In some image processing methods, 
-        this extra margin is necessary so that the result in the central part 
-        of the block is correct.
-        
-        border_extrapolation: (def=0) If margin>0, how to create voxels outside
-        the array for border blocks. A scalar value indicates that external 
-        voxels will be set to that value. A string 'mirror' means the array 
-        will be mirrored about the edges to create external voxels.
+        pad_width, mode, ...: Padding parameter. They are applied to each 
+        block, adding elements around the border of x as required. These 
+        parameters are the same used by function numpy.pad. Some examples:
+            
+            pad_width=(2,3), mode='constant', constant_values=(4, 6)
+            pad_width=(2, 3), mode='edge'
+            pad_width=(2, 3), mode='linear_ramp', end_values=(5, -4)
+            pad_width=(2,), mode='maximum'
+            pad_width=(2,), mode='mean'
+            pad_width=(2,), mode='median'
+            pad_width=((3, 2), (2, 3)), mode='minimum'
+            pad_width=(2, 3), mode='reflect'
+            pad_width=(2, 3), mode='reflect', reflect_type='odd'
+            pad_width=(2, 3), mode='symmetric'
+            pad_width=(2, 3), mode='symmetric', reflect_type='odd'
+            pad_width=(2, 3), mode='wrap'
         
     Returns:
-        block_slices: list of slice object. Each slice applied to x produces 
-        the corresponding block.
+        block_slices: List of slice objects. Each slice applied to x produces 
+        the corresponding block, blocks[i]=xout[block_slices[i]].
         
-        blocks: list of blocks. Each block is a sliced array (a chunk of the 
-        original array).
+        blocks: List of blocks. Each block is a sliced array (a chunk of the 
+        output array).
+        
+        xout: Array after padding. If pad_width=0, then xout=x.
     """
     
+    # number of dimensions
+    ndims = len(x.shape)
+
+    # if nblocks given as a scalar, converto to tuple
+    if (np.isscalar(nblocks)):
+        nblocks = [nblocks]*ndims
+    
+    # if pad_width given as a scalar, convert to (pad_before,pad_after) tuple
+    if (np.isscalar(pad_width)):
+        pad_width = (pad_width, pad_width)
+        
+    # if pad_width given as a (pad_before,pad_after) tuple, convert to
+    # ((pad_before,pad_after), (pad_before,pad_after),...) tuple
+    if (isinstance(pad_width, tuple) and not(isinstance(pad_width[0], tuple))):
+        pad_width = (pad_width,) * ndims
+        
+    # input arguments checks
     if (len(nblocks) != len(x.shape)):
         raise Exception('nblocks must have one element per dimension in x')
 
     if len([i for i, j in zip(nblocks, x.shape) if i > j]) > 0:
         raise Exception('There cannot be more blocks along a dimension than elements')
         
-    if (by_reference & margin>0):
-        raise Exception('Blocks with margin>0 cannot be returned by reference, because some margins will be outside the array')
+    if (by_reference & np.min(pad_width)>0):
+        raise Exception('Blocks with padding cannot be returned by reference, because some padding elements will be outside the array and others will overlap')
 
-    # number of dimensions
-    ndims = len(x.shape)
-
-    # block size in each dimension to produce the required number of blocks
-    block_shape = np.ceil(np.true_divide(x.shape, nblocks))
-    block_shape = list(block_shape.astype(int))
-    
-    # list of lists. idx_start = [[0, 5, 10], [0, 2, 4], [0, 2]]
-    # means that dimension=0 blocks start at indices [0,5,10]
-    #            dimension=1 blocks start at indices [0,2,4]
-    #            dimension=2 blocks start at indices [0,2]
+    # get two lists:
+    # idx_start[d] = starting indices of each block along dimension d
+    # idx_end[d] = ditto for end indices
     idx_start = []
     idx_end = []
     for d in range(ndims):
-        # first index of each block
-        idx_start += [list(range(0,x.shape[d],block_shape[d]))]
-        # last index of each block if the array were big enough
-        idx_end += [list(np.array(idx_start[d]) + block_shape[d] - 1)]
-        # match the size of the last block to the size of the array
-        idx_end[d][-1] = x.shape[d]-1
+        idx = np.array_split(range(x.shape[d]), nblocks[d])
+        idx_start += [[item[0] for item in idx]]
+        idx_end += [[item[-1] for item in idx]]
     
+    # total amount of padding (total=before+after) in each dimension
+    pad_width_total = [np.sum(pad) for pad in pad_width]
+    
+    # recompute the end indices in the padded array (the start ones are already
+    # valid, because the first block starts at the first padding element)
+    # idx_end := idx_end + total padding
+    idx_end = [i+w for i,w in zip(idx_end, pad_width_total)]
+        
     # create indices for each block in the array (we use iterators, but you can
     # see the indices using e.g. list(idx_start))
     idx_start = itertools.product(*idx_start)
     idx_end = itertools.product(*idx_end)
 
-    # add external margins to the array, if necessary
-    if (margin != 0):
-        if (type(margin) == 'str' & margin == ):
-            
+    # add external margins to the array, if necessary (padding also removes the
+    # reference to the input array, so if we want that the output blocks link 
+    # by reference to the input array, we cannot pad)
+    if (not(by_reference)):
+        x = np.lib.pad(x, pad_width, mode, **kwargs)
     
     # iterate to extract all blocks from array
     blocks = []
@@ -159,7 +184,7 @@ def block_split(x, nblocks, by_reference=True, *pad_args=None):
         # add block to output list
         blocks += [this_block]
         
-    return block_slices, blocks
+    return block_slices, blocks, x
 
 
 ###############################################################################

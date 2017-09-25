@@ -6,7 +6,7 @@
 @author: Ramón Casero <rcasero@gmail.com>
 @copyright: (C) 2017  Ramón Casero <rcasero@gmail.com>
 @license: GPL v3
-@version: 1.1.0
+@version: 1.2.0
 
 This file is part of pysto.
 
@@ -39,242 +39,123 @@ def example_2D_array_blocks():
                       [10, 11, 12, 13],
                       [20, 21, 22, 23]]), 
     
-            np.array([[ 4,  5,  6,  7],
-                      [14, 15, 16, 17],
-                      [24, 25, 26, 27]]), 
+            np.array([[ 4,  5,  6],
+                      [14, 15, 16],
+                      [24, 25, 26]]), 
     
-            np.array([[ 8,  9],
-                      [18, 19],
-                      [28, 29]]), 
+            np.array([[ 7,  8,  9],
+                      [17, 18, 19],
+                      [27, 28, 29]]), 
     
             np.array([[30, 31, 32, 33],
                       [40, 41, 42, 43]]), 
     
-            np.array([[34, 35, 36, 37],
-                      [44, 45, 46, 47]]), 
+            np.array([[34, 35, 36],
+                      [44, 45, 46]]), 
     
-            np.array([[38, 39],
-                      [48, 49]])
-            ]
+            np.array([[37, 38, 39],
+                      [47, 48, 49]])
+    
+    ]
             
     return x
 
+def example_padded_2D_array_blocks():
+    
+    x = [np.array([[ 0,  0,  0,  0,  0,  0,  0,  0],
+        [ 0,  0,  0,  0,  0,  0,  0,  0],
+        [ 0,  0,  0,  1,  2,  3,  4,  5],
+        [ 0,  0, 10, 11, 12, 13, 14, 15],
+        [ 0,  0, 20, 21, 22, 23, 24, 25],
+        [ 0,  0, 30, 31, 32, 33, 34, 35],
+        [ 0,  0, 40, 41, 42, 43, 44, 45],
+        [ 0,  0,  0,  0,  0,  0,  0,  0],
+        [ 0,  0,  0,  0,  0,  0,  0,  0],
+        [ 0,  0,  0,  0,  0,  0,  0,  0]]),
+        np.array([[ 0,  0,  0,  0,  0,  0,  0,  0],
+        [ 0,  0,  0,  0,  0,  0,  0,  0],
+        [ 1,  2,  3,  4,  5,  6,  7,  8],
+        [11, 12, 13, 14, 15, 16, 17, 18],
+        [21, 22, 23, 24, 25, 26, 27, 28],
+        [31, 32, 33, 34, 35, 36, 37, 38],
+        [41, 42, 43, 44, 45, 46, 47, 48],
+        [ 0,  0,  0,  0,  0,  0,  0,  0],
+        [ 0,  0,  0,  0,  0,  0,  0,  0],
+        [ 0,  0,  0,  0,  0,  0,  0,  0]]),
+        np.array([[ 0,  0,  0,  0,  0,  0,  0],
+        [ 0,  0,  0,  0,  0,  0,  0],
+        [ 4,  5,  6,  7,  8,  9,  0],
+        [14, 15, 16, 17, 18, 19,  0],
+        [24, 25, 26, 27, 28, 29,  0],
+        [34, 35, 36, 37, 38, 39,  0],
+        [44, 45, 46, 47, 48, 49,  0],
+        [ 0,  0,  0,  0,  0,  0,  0],
+        [ 0,  0,  0,  0,  0,  0,  0],
+        [ 0,  0,  0,  0,  0,  0,  0]]),
+        np.array([[ 0,  0,  0,  0,  0,  0,  0],
+        [ 0,  0,  0,  0,  0,  0,  0],
+        [ 6,  7,  8,  9,  0,  0,  0],
+        [16, 17, 18, 19,  0,  0,  0],
+        [26, 27, 28, 29,  0,  0,  0],
+        [36, 37, 38, 39,  0,  0,  0],
+        [46, 47, 48, 49,  0,  0,  0],
+        [ 0,  0,  0,  0,  0,  0,  0],
+        [ 0,  0,  0,  0,  0,  0,  0],
+        [ 0,  0,  0,  0,  0,  0,  0]])]
+                
+    return x
 
 def example_3D_array_blocks():
     
-    x = [
-            np.array([[[ 0,  1],
-                       [ 3,  4]],
- 
-                      [[15, 16],
-                       [18, 19]],
- 
-                      [[30, 31],
-                       [33, 34]],
- 
-                      [[45, 46],
-                       [48, 49]],
- 
-                      [[60, 61],
-                       [63, 64]]]), 
-
-            np.array([[[ 2],
-                       [ 5]],
- 
-                      [[17],
-                       [20]],
- 
-                      [[32],
-                       [35]],
- 
-                      [[47],
-                       [50]],
- 
-                      [[62],
-                       [65]]]), 
-
-            np.array([[[ 6,  7],
-                       [ 9, 10]],
- 
-                      [[21, 22],
-                       [24, 25]],
- 
-                      [[36, 37],
-                       [39, 40]],
- 
-                      [[51, 52],
-                       [54, 55]],
- 
-                      [[66, 67],
-                       [69, 70]]]), 
-
-            np.array([[[ 8],
-                       [11]],
- 
-                      [[23],
-                       [26]],
- 
-                      [[38],
-                       [41]],
- 
-                      [[53],
-                       [56]],
- 
-                      [[68],
-                       [71]]]), 
-
-            np.array([[[12, 13]],
- 
-                      [[27, 28]],
- 
-                      [[42, 43]],
- 
-                      [[57, 58]],
- 
-                      [[72, 73]]]), 
-
-            np.array([[[14]],
- 
-                      [[29]],
- 
-                      [[44]],
- 
-                      [[59]],
- 
-                      [[74]]]), 
-
-            np.array([[[ 75,  76],
-                       [ 78,  79]],
- 
-                      [[ 90,  91],
-                       [ 93,  94]],
- 
-                      [[105, 106],
-                       [108, 109]],
- 
-                      [[120, 121],
-                       [123, 124]],
- 
-                      [[135, 136],
-                       [138, 139]]]), 
-
-            np.array([[[ 77],
-                       [ 80]],
- 
-                      [[ 92],
-                       [ 95]],
- 
-                      [[107],
-                       [110]],
- 
-                      [[122],
-                       [125]],
- 
-                      [[137],
-                       [140]]]), 
-
-            np.array([[[ 81,  82],
-                       [ 84,  85]],
- 
-                      [[ 96,  97],
-                       [ 99, 100]],
- 
-                      [[111, 112],
-                       [114, 115]],
- 
-                      [[126, 127],
-                       [129, 130]],
- 
-                      [[141, 142],
-                       [144, 145]]]), 
-
-            np.array([[[ 83],
-                       [ 86]],
- 
-                      [[ 98],
-                       [101]],
- 
-                      [[113],
-                       [116]],
- 
-                      [[128],
-                       [131]],
- 
-                      [[143],
-                       [146]]]), 
-
-            np.array([[[ 87,  88]],
- 
-                      [[102, 103]],
- 
-                      [[117, 118]],
- 
-                      [[132, 133]],
- 
-                      [[147, 148]]]), 
-
-            np.array([[[ 89]],
- 
-                      [[104]],
- 
-                      [[119]],
- 
-                      [[134]],
- 
-                      [[149]]]), 
-
-            np.array([[[150, 151],
-                       [153, 154]],
- 
-                      [[165, 166],
-                       [168, 169]],
- 
-                      [[180, 181],
-                       [183, 184]]]), 
-
-            np.array([[[152],
-                       [155]],
- 
-                      [[167],
-                       [170]],
- 
-                      [[182],
-                       [185]]]), 
-
-            np.array([[[156, 157],
-                       [159, 160]],
- 
-                      [[171, 172],
-                       [174, 175]],
- 
-                      [[186, 187],
-                       [189, 190]]]), 
-
-            np.array([[[158],
-                       [161]],
- 
-                      [[173],
-                       [176]],
- 
-                      [[188],
-                       [191]]]), 
-
-            np.array([[[162, 163]],
- 
-                      [[177, 178]],
- 
-                      [[192, 193]]]), 
-
-            np.array([[[164]],
- 
-                      [[179]],
- 
-                      [[194]]])]
+    x = [np.array([[[ 0,  1,  2],
+         [ 5,  6,  7],
+         [10, 11, 12]]]), 
+            np.array([[[ 3,  4],
+         [ 8,  9],
+         [13, 14]]]), 
+            np.array([[[15, 16, 17],
+         [20, 21, 22]]]), 
+            np.array([[[18, 19],
+         [23, 24]]]), 
+            np.array([[[25, 26, 27],
+         [30, 31, 32]]]), 
+            np.array([[[28, 29],
+         [33, 34]]]), 
+            np.array([[[35, 36, 37],
+         [40, 41, 42],
+         [45, 46, 47]]]), 
+            np.array([[[38, 39],
+         [43, 44],
+         [48, 49]]]), 
+            np.array([[[50, 51, 52],
+         [55, 56, 57]]]), 
+            np.array([[[53, 54],
+         [58, 59]]]), 
+            np.array([[[60, 61, 62],
+         [65, 66, 67]]]), 
+            np.array([[[63, 64],
+         [68, 69]]]), 
+            np.array([[[70, 71, 72],
+         [75, 76, 77],
+         [80, 81, 82]]]), 
+            np.array([[[73, 74],
+         [78, 79],
+         [83, 84]]]), 
+            np.array([[[85, 86, 87],
+         [90, 91, 92]]]), 
+            np.array([[[88, 89],
+         [93, 94]]]), 
+            np.array([[[ 95,  96,  97],
+         [100, 101, 102]]]), 
+            np.array([[[ 98,  99],
+         [103, 104]]])]
                 
     return x
 
 
 
+# test no padding, blocks by reference (changes in blocks affect the original 
+# array)
 def test_blocks_by_reference():
     
     # create test 2D array
@@ -290,19 +171,27 @@ def test_blocks_by_reference():
     #        [40, 41, 42, 43, 44, 45, 46, 47, 48, 49]])
     
     # split into 2,3 blocks
-    block_slices, blocks = pymg.block_split(x, (2,3))
+    block_slices, blocks, xout = pymg.block_split(x, nblocks=(2,3), by_reference=True)
+
+    # check number of blocks
+    assert(2*3 == len(blocks))
+
+    # check that array hasn't changed
+    assert((x == xout).all())
     
+    # load ground truth    
     expected_blocks = example_2D_array_blocks()
     
     # check that all blocks were computed as expected    
     for eb, b in zip(expected_blocks, blocks):
         assert((eb == b).all())
         
-    # set one block to zeros, and check whether the original array changes too
+    # set one block to zeros, and check that the original array changes too
     blocks[3][...] = 0
     assert((x[3:5, 0:4] == blocks[3]).all())
     
-
+# test no padding, blocks by value (changes in blocks don't affect the original 
+# array)
 def test_blocks_by_value():
     
     # create test 2D array
@@ -318,27 +207,35 @@ def test_blocks_by_value():
     #        [40, 41, 42, 43, 44, 45, 46, 47, 48, 49]])
     
     # split into 2,3 blocks
-    block_slices, blocks = pymg.block_split(x, (2,3), by_reference=False)
+    block_slices, blocks, xout = pymg.block_split(x, nblocks=(2,3), by_reference=False)
+
+    # check number of blocks
+    assert(2*3 == len(blocks))
+
+    # check that array hasn't changed
+    assert((x == xout).all())
     
+    # load ground truth    
     expected_blocks = example_2D_array_blocks()
     
     # check that all blocks were computed as expected    
     for eb, b in zip(expected_blocks, blocks):
         assert((eb == b).all())
         
-    # set one block to zeros, and check that the original array has not changed
+    # set one block to zeros, and check that the original array does not change
     blocks[3][...] = 0
-    assert((x[3:5, 0:4] == expected_blocks[3]).all())
+    assert((x[block_slices[3]] == expected_blocks[3]).all())
+    
 
 # slice a 3D array into blocks
 def test_3d_array():
     
-    R = 13
-    C = 5
     S = 3
+    R = 7
+    C = 5
     
     # create 3D array
-    x = np.array(range(R*C*S)).reshape(R,C,S)
+    x = np.array(range(R*C*S)).reshape(S,R,C)
     
     # array([[[  0,   1,   2],
     #     [  3,   4,   5],
@@ -346,22 +243,16 @@ def test_3d_array():
     #     [  9,  10,  11],
     #     [ 12,  13,  14]],
     # 
-    #    [[ 15,  16,  17],
-    #     [ 18,  19,  20],
-    #     [ 21,  22,  23],
-    #     [ 24,  25,  26],
-    #     [ 27,  28,  29]],
-    # 
     # ...
     # 
-    #    [[180, 181, 182],
-    #     [183, 184, 185],
-    #     [186, 187, 188],
-    #     [189, 190, 191],
-    #     [192, 193, 194]]])
+    #   [[ 90,  91,  92],
+    #    [ 93,  94,  95],
+    #    [ 96,  97,  98],
+    #    [ 99, 100, 101],
+    #    [102, 103, 104]]])
     
     # split into blocks
-    block_slices, blocks = pymg.block_split(x, (3,3,2))
+    block_slices, blocks, _ = pymg.block_split(x, nblocks=(3,3,2), by_reference=True)
 
     # load ground truth
     expected_blocks = example_3D_array_blocks()
@@ -370,20 +261,57 @@ def test_3d_array():
     for eb, b in zip(expected_blocks, blocks):
         assert((eb == b).all())
 
-def test_slicing():
+# check that trying to use blocks by reference with padding will throw an exception
+def test_no_reference_with_padding():
     
-    R = 11
-    C = 6
-    S = 3
-    T = 4
+    # create test 2D array
+    R = 5
+    C = 10
     
-    # create 3D array
-    x = np.array(range(R*C*S*T)).reshape(R,C,S,T)
+    x = np.array(range(R*C)).reshape(R,C)
     
-    # split into blocks
-    block_slices, blocks = pymg.block_split(x, (3,3,2,3))
+    # array([[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9],
+    #        [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+    #        [20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
+    #        [30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
+    #        [40, 41, 42, 43, 44, 45, 46, 47, 48, 49]])
     
-    # check that the blocks are the same as the slices of the array
-    for i in range(len(blocks)):
-        assert((blocks[i] == x[block_slices[i]]).all())
+    # split into 2,3 blocks
+    try:
+        block_slices, blocks, xout = pymg.block_split(x, nblocks=(2,3), pad_width=3, by_reference=True)
+    except Exception:
+        pass
+    else:
+        raise Exception('Exception not raised')
+    
+# check that padding works
+def test_padding():
+    
+    # create test 2D array
+    R = 5
+    C = 10
+    
+    x = np.array(range(R*C)).reshape(R,C)
+    
+    # array([[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9],
+    #        [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+    #        [20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
+    #        [30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
+    #        [40, 41, 42, 43, 44, 45, 46, 47, 48, 49]])
+    
+    # split into 2,3 blocks
+    block_slices, blocks, xout = pymg.block_split(x, nblocks=(1,4), 
+                                                  pad_width=(2,3), mode='constant', constant_values=0)
 
+    # check number of blocks
+    assert(1*4 == len(blocks))
+
+    # check that array has been padded
+    assert((np.pad(x, pad_width=(2,3), mode='constant') == xout).all())
+    
+    # load ground truth    
+    expected_blocks = example_padded_2D_array_blocks()
+    
+    # check that all blocks were computed as expected    
+    for eb, b in zip(expected_blocks, blocks):
+        assert((eb == b).all())
