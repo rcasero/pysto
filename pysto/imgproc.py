@@ -122,11 +122,14 @@ def block_split(x, nblocks, by_reference=False, pad_width=0, mode='constant', **
         pad_width = (pad_width,) * ndims
         
     # input arguments checks
-    if (len(nblocks) != len(x.shape)):
+    if (len(nblocks) != ndims):
         raise Exception('nblocks must have one element per dimension in x')
 
+    if (len(pad_width) != ndims):
+        raise Exception('pad_width must have one (p_before,p_after) tuple per dimension in x')
+
     if len([i for i, j in zip(nblocks, x.shape) if i > j]) > 0:
-        raise Exception('There cannot be more blocks along a dimension than elements')
+        raise Exception('There cannot be more blocks along a dimension than array elements')
         
     if (by_reference & np.min(pad_width)>0):
         raise Exception('Blocks with padding cannot be returned by reference, because some padding elements will be outside the array and others will overlap')
@@ -186,7 +189,101 @@ def block_split(x, nblocks, by_reference=False, pad_width=0, mode='constant', **
         
     return block_slices, blocks, x
 
+###############################################################################
+## block_stack
+###############################################################################
 
+def block_stack(blocks, block_slices, pad_width=0):
+    """Reassemble blocks into an nd-array.
+    
+    Stack a list of blocks to reassemble the original array. This function 
+    is the opposite of block_split().
+    
+        x, block_slices_no_padding = block_stack(blocks, block_slices, pad_width=0)
+        
+    If the blocks were created with overlap (padding), the padding is removed
+    before the blocks are stacked.
+    
+    Args:
+        blocks: List of blocks (output of block_split). Each block is a sliced 
+        array (a chunk of the array we want to recover). The blocks may be 
+        overlapping if padding was chosen in block_split().
+        
+        block_slices: List of slice objects with padding. Each slice applied to 
+        the original padded x produces the corresponding padded block, 
+        blocks[i]=x_padded[block_slices[i]].
+        
+        pad_width: (def 0) Scalar or tuple describing the amount of padding 
+        that was used in block_split().
+        
+    Returns:
+        x: nd-array (numpy).
+        
+        block_slices_no_padding: List of slice objects without padding. Each 
+        slice applied to x produces one non-overlapping block, 
+        block_no_padding=x[block_slices_no_padding].
+    """
+
+    # number of blocks (length of the list of blocks, whereas in block_split(),
+    # nblocks is a tuple with the number of blocks in each axis)
+    nblocks = len(blocks)
+    
+    # number of dimensions
+    ndims = len(block_slices[0])
+    
+    # if pad_width given as a scalar, convert to (pad_before,pad_after) tuple
+    if (np.isscalar(pad_width)):
+        pad_width = (pad_width, pad_width)
+        
+    # if pad_width given as a (pad_before,pad_after) tuple, convert to
+    # ((pad_before,pad_after), (pad_before,pad_after),...) tuple
+    if (isinstance(pad_width, tuple) and not(isinstance(pad_width[0], tuple))):
+        pad_width = (pad_width,) * ndims
+
+    # input arguments checks
+    if (nblocks != len(block_slices)):
+        raise Exception('Not the same number of blocks as slices')
+        
+    if (len(pad_width) != ndims):
+        raise Exception('pad_width must have one (p_before,p_after) tuple per dimension in x')
+
+    # size of whole output array. We get the start and stop value of every 
+    # slice. If start=X, it means the array has at least size X+1. If stop=X, 
+    # the array has at least X elements
+    x_shape = [0] * ndims
+    for d in range(ndims):
+        x_shape[d] = np.max([[sl[d].start + 1]+[sl[d].stop] for sl in block_slices]) - pad_width[d][0]
+        x_shape[d] -= pad_width[d][1]
+    
+    # init output array
+    x = np.empty(tuple(x_shape), dtype=blocks[0].dtype)
+    x[:] = np.NAN
+
+    # remove padding from block_slices
+    block_slices_no_padding = []
+    for sl, b in zip(block_slices, blocks):
+        
+        # reindex slice so that it points to the block without padding
+        this_block_slice = [] # referred to full output array
+        slice_to_remove_padding = [] # referred to current block, only to remove padding
+        for d in range(ndims):
+            # slice referred to the full output array
+            this_block_slice += [slice(sl[d].start,
+                                       sl[d].stop  - pad_width[d][0] - pad_width[d][1],
+                                       sl[d].step)]
+    
+            # local slice only to remove the padding in current block
+            slice_to_remove_padding += [slice(pad_width[d][0],
+                                              b.shape[d] - pad_width[d][1],1)]
+        
+        block_slices_no_padding += [this_block_slice]
+        
+        # assign current block (without padding) to output array
+        x[this_block_slice] = b[slice_to_remove_padding]
+    
+
+    return x, block_slices_no_padding
+    
 ###############################################################################
 ## imfuse
 ###############################################################################
