@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## v?.?.?
+## v1.2.0
 ### Added
 
+- improc.block_stack(): Stack a list of blocks to reassemble the
+  original array. This function is the opposite of block_split().
 - Makefile: Simplify common development tasks (test, package).
 
 ## v1.1.3
