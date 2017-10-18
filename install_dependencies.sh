@@ -82,3 +82,83 @@ pip install .
 tput setaf 1; echo "** Install development tools in local environment"; tput sgr0
 conda install -y spyder pytest
 pip install twine wheel setuptools --upgrade
+
+########################################################################
+# build SimpleElastix and install python wrappers
+
+# another type of local environment used by SimpleElastix's SuperBuild
+conda install -y virtualenv
+
+# we build outside the local environment (this way, we have one build
+# for all local environments)
+source deactivate
+
+# prepare to install SimpleElastix
+pushd ~/Downloads
+if [ -d SimpleElastix ]
+then
+   cd SimpleElastix
+   git pull
+else
+   git clone https://github.com/SuperElastix/SimpleElastix
+   cd SimpleElastix
+fi
+mkdir -p build
+cd build
+
+# build and install simpleElastix. No python wrapper.
+# Skip tests, examples and documentation to speed things up
+ITK_OPTS="\
+-DPYTHON_EXECUTABLE:FILEPATH= \
+-DPYTHON_INCLUDE_DIR:PATH= \
+-DPYTHON_LIBRARY:FILEPATH= \
+-DWRAP_DEFAULT:BOOL=OFF \
+-DWRAP_PYTHON:BOOL=OFF \
+-DBUILD_TESTING:BOOL=OFF \
+-DBUILD_EXAMPLES:BOOL=OFF \
+-DBUILD_SHARED_LIBS:BOOL=OFF \
+-DITK_BUILD_TESTING:BOOL=OFF \
+-DITK_BUILD_EXAMPLES:BOOL=OFF \
+-DITK_BUILD_DOCUMENTATION:BOOL=OFF \
+-DSimpleITK_OPENMP:BOOL=ON"
+cmake $ITK_OPTS ../SuperBuild || exit 1
+make -j4 || exit 1
+
+#-DPYTHON_EXECUTABLE:FILEPATH=$PYTHON_EXECUTABLE \
+#-DPYTHON_INCLUDE_DIR:PATH=$PYTHON_INCLUDE_DIR \
+#-DPYTHON_LIBRARY:FILEPATH=$PYTHON_LIBRARY \
+
+
+# we want to use python provided by anaconda, to avoid having
+# unexpected versions detected in the system
+PYTHON_EXECUTABLE=/opt/miniconda3/bin/python
+PYTHON_INCLUDE_DIR=/opt/miniconda3/include/python3.6m
+PYTHON_LIBRARY=/opt/miniconda3/lib/libpython3.6m.so
+if [ ! -e $PYTHON_EXECUTABLE ]
+then
+    tput setaf 1
+    >&2 echo "Error: Python executable not found: $PYTHON_EXECUTABLE"
+    tput sgr0
+    exit 1
+fi
+if [ ! -d $PYTHON_INCLUDE_DIR ]
+then
+    tput setaf 1
+    >&2 echo "Error: Python include dir not found: $PYTHON_INCLUDE_DIR"
+    tput sgr0
+    exit 1
+fi
+if [ ! -e $PYTHON_LIBRARY ]
+then
+    tput setaf 1
+    >&2 echo "Error: Python library not found: $PYTHON_LIBRARY"
+    tput sgr0
+    exit 1
+fi
+
+# we activate the local environment to install the python package
+source activate histo2ct
+
+# install python wrappers
+cd SimpleITK-build/Wrapping/Python/Packaging || exit 1
+python setup.py install || exit 1
