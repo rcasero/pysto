@@ -1,9 +1,16 @@
 # install_dependencies.sh
 #
-#    Script to create a local environment ("pysto") and install
-#    dependencies for pysto.
+#    Project pysto's script to create local environments for python
+#    2.7 ("pysto_2.7") and 3.6 ("pysto_3.6"), and install Ubuntu and
+#    python dependencies.
+#
+#    In particular, it downloads the current version of SimpleElastix
+#    to ~/Downloads/SimpleElastix and builds python packages for
+#    python 2.7 and 3.6, installing them in the corresponding
+#    directories (currently, there isn't a python package either under
+#    conda, conda-forge or pip).
 
-#    Copyright (C) 2017  Ramón Casero <rcasero@gmail.com>
+#    Copyright  2017  Ramón Casero <rcasero@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
