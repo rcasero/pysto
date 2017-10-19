@@ -36,7 +36,8 @@ get_python_executable() {
     echo $PYTHON_EXECUTABLE
 }
 get_python_include_dir() {
-    PYTHON_INCLUDE_DIR=`python-config --includes | awk '{print $1}' | sed 's/^-I//g'`
+    PYTHON_INCLUDE_DIR=`python -c 'from distutils import sysconfig; \
+print(sysconfig.get_config_var("INCLUDEDIR"))'`
     if [[ ! -d "$PYTHON_INCLUDE_DIR" ]]
     then
 	tput setaf 1
@@ -64,7 +65,7 @@ print(os.path.join(sysconfig.get_config_var("LIBDIR"), sysconfig.get_config_var(
 # basic packages
 
 # ubuntu packages
-sudo apt-get install -y jq curl automake
+sudo apt-get install -y jq curl automake python-dev
 
 # conda package manager
 if hash conda 2>/dev/null; then
@@ -178,7 +179,7 @@ cd SimpleITK-build/Wrapping/Python/Packaging || exit 1
 python setup.py install || exit 1
 
 # build for python 3.6
-cd ../build_3.6
+cd ~/Downloads/SimpleElastix/build_3.6
 source activate pysto_3.6 || exit 1
 
 SITK_OPTS="\
