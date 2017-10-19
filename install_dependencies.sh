@@ -10,7 +10,7 @@
 #    directories (currently, there isn't a python package either under
 #    conda, conda-forge or pip).
 
-#    Copyright  2017  Ramón Casero <rcasero@gmail.com>
+#    Copyright © 2017  Ramón Casero <rcasero@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
