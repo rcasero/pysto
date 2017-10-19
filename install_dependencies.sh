@@ -20,8 +20,51 @@
 
 #!/bin/bash
 
+#################################################################################################
+# auxiliary functions
+
+# get paths to python executable, include directory and library
+get_python_executable() {
+    PYTHON_EXECUTABLE=`which python`
+    if [[ ! -e "$PYTHON_EXECUTABLE" ]]
+    then
+	tput setaf 1
+	>&2 echo "Error: Python executable not found: \"$PYTHON_EXECUTABLE\""
+	tput sgr0
+	#exit 1
+    fi
+    echo $PYTHON_EXECUTABLE
+}
+get_python_include_dir() {
+    PYTHON_INCLUDE_DIR=`python-config --includes | awk '{print $1}' | sed 's/^-I//g'`
+    if [[ ! -d "$PYTHON_INCLUDE_DIR" ]]
+    then
+	tput setaf 1
+	>&2 echo "Error: Python include dir not found: \"$PYTHON_INCLUDE_DIR\""
+	tput sgr0
+	#exit 1
+    fi
+    echo $PYTHON_INCLUDE_DIR
+}
+get_python_library() {
+    PYTHON_LIBRARY=`python -c 'from distutils import sysconfig; \
+import os; \
+print(os.path.join(sysconfig.get_config_var("LIBDIR"), sysconfig.get_config_var("LDLIBRARY")))'`
+    if [[ ! -e "$PYTHON_LIBRARY" ]]
+    then
+	tput setaf 1
+	>&2 echo "Error: Python library not found: $PYTHON_LIBRARY"
+	tput sgr0
+	#exit 1
+    fi
+    echo $PYTHON_LIBRARY
+}
+
+#################################################################################################
+# basic packages
+
 # ubuntu packages
-sudo apt-get install -y jq curl
+sudo apt-get install -y jq curl automake
 
 # conda package manager
 if hash conda 2>/dev/null; then
@@ -103,17 +146,23 @@ else
    git clone https://github.com/SuperElastix/SimpleElastix
    cd SimpleElastix
 fi
-mkdir -p build
-cd build
 
-# build and install simpleElastix. No python wrapper.
-# Skip tests, examples and documentation to speed things up
-ITK_OPTS="\
--DPYTHON_EXECUTABLE:FILEPATH= \
--DPYTHON_INCLUDE_DIR:PATH= \
--DPYTHON_LIBRARY:FILEPATH= \
+# we are going to build for each python version in a separate
+# directory. When you try to reuse the same directory, the build
+# restarts anyway
+mkdir -p build_2.7
+mkdir -p build_3.6
+
+# build for python 2.7
+cd build_2.7
+source activate pysto_2.7 || exit 1
+
+SITK_OPTS="\
+-DWRAP_PYTHON:BOOL=ON \
+-DPYTHON_EXECUTABLE:FILEPATH=$(get_python_executable) \
+-DPYTHON_INCLUDE_DIR:PATH=$(get_python_include_dir) \
+-DPYTHON_LIBRARY:FILEPATH=$(get_python_library) \
 -DWRAP_DEFAULT:BOOL=OFF \
--DWRAP_PYTHON:BOOL=OFF \
 -DBUILD_TESTING:BOOL=OFF \
 -DBUILD_EXAMPLES:BOOL=OFF \
 -DBUILD_SHARED_LIBS:BOOL=OFF \
@@ -121,44 +170,36 @@ ITK_OPTS="\
 -DITK_BUILD_EXAMPLES:BOOL=OFF \
 -DITK_BUILD_DOCUMENTATION:BOOL=OFF \
 -DSimpleITK_OPENMP:BOOL=ON"
-cmake $ITK_OPTS ../SuperBuild || exit 1
+cmake $SITK_OPTS ../SuperBuild || exit 1
 make -j4 || exit 1
-
-#-DPYTHON_EXECUTABLE:FILEPATH=$PYTHON_EXECUTABLE \
-#-DPYTHON_INCLUDE_DIR:PATH=$PYTHON_INCLUDE_DIR \
-#-DPYTHON_LIBRARY:FILEPATH=$PYTHON_LIBRARY \
-
-
-# we want to use python provided by anaconda, to avoid having
-# unexpected versions detected in the system
-PYTHON_EXECUTABLE=/opt/miniconda3/bin/python
-PYTHON_INCLUDE_DIR=/opt/miniconda3/include/python3.6m
-PYTHON_LIBRARY=/opt/miniconda3/lib/libpython3.6m.so
-if [ ! -e $PYTHON_EXECUTABLE ]
-then
-    tput setaf 1
-    >&2 echo "Error: Python executable not found: $PYTHON_EXECUTABLE"
-    tput sgr0
-    exit 1
-fi
-if [ ! -d $PYTHON_INCLUDE_DIR ]
-then
-    tput setaf 1
-    >&2 echo "Error: Python include dir not found: $PYTHON_INCLUDE_DIR"
-    tput sgr0
-    exit 1
-fi
-if [ ! -e $PYTHON_LIBRARY ]
-then
-    tput setaf 1
-    >&2 echo "Error: Python library not found: $PYTHON_LIBRARY"
-    tput sgr0
-    exit 1
-fi
-
-# we activate the local environment to install the python package
-source activate histo2ct
 
 # install python wrappers
 cd SimpleITK-build/Wrapping/Python/Packaging || exit 1
 python setup.py install || exit 1
+
+# build for python 3.6
+cd ../build_3.6
+source activate pysto_3.6 || exit 1
+
+SITK_OPTS="\
+-DWRAP_PYTHON:BOOL=ON \
+-DPYTHON_EXECUTABLE:FILEPATH=$(get_python_executable) \
+-DPYTHON_INCLUDE_DIR:PATH=$(get_python_include_dir) \
+-DPYTHON_LIBRARY:FILEPATH=$(get_python_library) \
+-DWRAP_DEFAULT:BOOL=OFF \
+-DBUILD_TESTING:BOOL=OFF \
+-DBUILD_EXAMPLES:BOOL=OFF \
+-DBUILD_SHARED_LIBS:BOOL=OFF \
+-DITK_BUILD_TESTING:BOOL=OFF \
+-DITK_BUILD_EXAMPLES:BOOL=OFF \
+-DITK_BUILD_DOCUMENTATION:BOOL=OFF \
+-DSimpleITK_OPENMP:BOOL=ON"
+cmake $SITK_OPTS ../SuperBuild || exit 1
+make -j4 || exit 1
+
+# install python wrappers
+cd SimpleITK-build/Wrapping/Python/Packaging || exit 1
+python setup.py install || exit 1
+
+
+
