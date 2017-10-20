@@ -10,7 +10,6 @@ import os
 import SimpleITK as sitk
 import pysto.imgprocITK as pitk
 
-
 # root and test data directories for pysto
 root_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..'))
 data_path = os.path.join(root_path, 'tests', 'data')
