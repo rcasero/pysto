@@ -7,6 +7,8 @@
 #         pv: The version of python we want to build the wrappers for,
 #         e.g. 2.7, 3.6...
 #
+# Dependencies: conda needs to be installed so that we can work with local environments.
+#
 # This script downloads the SimpleElastix code to
 #
 #     ~/Downloads/SimpleElastix
@@ -102,21 +104,14 @@ print(os.path.join(sysconfig.get_config_var("LIBDIR"), sysconfig.get_config_var(
 sudo apt-get install -y cmake
 
 #################################################################################################
-# install conda package manager
+# check for conda package manager
 
-if hash conda 2>/dev/null; then
-    tput setaf 1; echo "** Conda 3 package manager already installed"; tput sgr0
+if hash conda 2>/dev/null
+then
+    :
 else
-    tput setaf 1; echo "** Installing conda 3 package manager"; tput sgr0
-    # download installer
-    if [ ! -e Miniconda3-latest-Linux-x86_64.sh ]
-    then
-	wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    fi
-    # install conda
-    chmod u+x Miniconda3-latest-Linux-x86_64.sh
-    sudo ./Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3
-    source ~/.bashrc
+    tput setaf 1; echo "** Conda not found"; tput sgr0
+    exit 1
 fi
 
 #################################################################################################

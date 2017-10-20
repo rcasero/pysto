@@ -1,4 +1,4 @@
-# install_dependencies.sh
+# file: install_dependencies.sh
 #
 #    Summary:
 #    ====================================================================
@@ -7,9 +7,21 @@
 #    2.7 ("pysto_2.7") and 3.6 ("pysto_3.6"), and install Ubuntu and
 #    python dependencies.
 #
-#    An important dependency is SimpleElastix. As SimpleElastix is not
-#    required for all modules, and it has no pip/conda package,
-#    instead we build and install it with this script.
+#
+#    Syntax:
+#    ====================================================================
+#
+#    ./install_dependencies.sh
+#    ./install_dependencies.sh SimpleITK
+#    ./install_dependencies.sh SimpleElastix
+#
+#    An important dependency is SimpleITK, and by default, this script
+#    installs the official conda simpleitk package.
+#
+#    However, we may prefer installing SimpleElastix, an extension of
+#    SimpleITK. In this latter case, there's no pip/conda package, so
+#    we have to download and build the SimpleElastix project.
+#
 #
 #    SimpleElastix/SimpleITK:
 #    ====================================================================
@@ -88,6 +100,33 @@
 #!/bin/bash
 
 #################################################################################################
+# syntax
+
+# check input parameters and assign default
+if [ "$#" -eq 0 ]
+then
+    # default input value
+    SIMPLEITK_PROJ=SimpleITK
+elif [ "$#" -eq 1 ]
+then
+    SIMPLEITK_PROJ=$1
+    if [[ $SIMPLEITK_PROJ != "SimpleITK" ]] && [[ $SIMPLEITK_PROJ != "SimpleElastix" ]]
+    then
+	tput setaf 1
+	echo "Error: Syntax: ./install_dependencies.sh [SimpleITK | SimpleElastix]"
+	tput sgr0
+	exit 1
+    fi
+else
+    tput setaf 1
+    echo "Error: Syntax: ./install_dependencies.sh [SimpleITK | SimpleElastix]"
+    tput sgr0
+    exit 1
+fi
+
+# check input arguments
+
+#################################################################################################
 # auxiliary functions
 
 # # creates conda local environment foo_2.7 with python 2.7 if it doesn't exist
@@ -113,15 +152,23 @@ create_conda_local_environment() {
 sudo apt-get install -y jq curl automake
 
 #################################################################################################
-# build conda and SimpleElastix
+# install conda package manager
 
-# TODO: we build SimpleElastix in separate 2.7 and 3.6 environments,
-# as currently we are not sure how to make the produced SimpleITK
-# shared object link to the local libraries in each separate local
-# environment
-
-./build_SimpleElastix.sh 2.7 || exit 1
-./build_SimpleElastix.sh 3.6 || exit 1
+if hash conda 2>/dev/null
+then
+    tput setaf 1; echo "** Conda 3 package manager already installed"; tput sgr0
+else
+    tput setaf 1; echo "** Installing conda 3 package manager"; tput sgr0
+    # download installer
+    if [ ! -e Miniconda3-latest-Linux-x86_64.sh ]
+    then
+	wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    fi
+    # install conda
+    chmod u+x Miniconda3-latest-Linux-x86_64.sh
+    sudo ./Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3
+    source ~/.bashrc
+fi
 
 #################################################################################################
 # pysto local environment: for python 2.7
@@ -183,3 +230,20 @@ pip install --upgrade twine wheel setuptools
 # install SimpleElastix python wrappers
 cd ~/Downloads/SimpleElastix/build_3.6/SimpleITK-build/Wrapping/Python/Packaging || exit 1
 python setup.py install || exit 1
+
+
+
+
+
+
+#################################################################################################
+# build SimpleElastix
+
+# TODO: we build SimpleElastix in separate 2.7 and 3.6 environments,
+# as currently we are not sure how to make the produced SimpleITK
+# shared object link to the local libraries in each separate local
+# environment
+
+./build_SimpleElastix.sh 2.7 || exit 1
+./build_SimpleElastix.sh 3.6 || exit 1
+
