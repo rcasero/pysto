@@ -106,65 +106,22 @@ create_conda_local_environment() {
     fi
 }
 
-# get paths to python executable, include directory and library
-get_python_executable() {
-    PYTHON_EXECUTABLE=`which python`
-    if [[ ! -e "$PYTHON_EXECUTABLE" ]]
-    then
-	tput setaf 1
-	>&2 echo "Error: Python executable not found: \"$PYTHON_EXECUTABLE\""
-	tput sgr0
-	#exit 1
-    fi
-    echo $PYTHON_EXECUTABLE
-}
-# location of Python.h in the conda environment
-get_python_include_dir() {
-    PYTHON_INCLUDE_DIR=`find ${CONDA_PREFIX}/include/ -name Python.h | xargs dirname`
-    if [[ ! -d "$PYTHON_INCLUDE_DIR" ]]
-    then
-	tput setaf 1
-	>&2 echo "Error: Python include dir not found: \"$PYTHON_INCLUDE_DIR\""
-	tput sgr0
-	#exit 1
-    fi
-    echo $PYTHON_INCLUDE_DIR
-}
-get_python_library() {
-    PYTHON_LIBRARY=`python -c 'from distutils import sysconfig; \
-import os; \
-print(os.path.join(sysconfig.get_config_var("LIBDIR"), sysconfig.get_config_var("LDLIBRARY")))'`
-    if [[ ! -e "$PYTHON_LIBRARY" ]]
-    then
-	tput setaf 1
-	>&2 echo "Error: Python library not found: $PYTHON_LIBRARY"
-	tput sgr0
-	#exit 1
-    fi
-    echo $PYTHON_LIBRARY
-}
-
 #################################################################################################
 # basic packages
 
 # ubuntu packages
 sudo apt-get install -y jq curl automake
 
-# conda package manager
-if hash conda 2>/dev/null; then
-    tput setaf 1; echo "** Conda 3 package manager already installed"; tput sgr0
-else
-    tput setaf 1; echo "** Installing conda 3 package manager"; tput sgr0
-    # download installer
-    if [ ! -e Miniconda3-latest-Linux-x86_64.sh ]
-    then
-	wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    fi
-    # install conda
-    chmod u+x Miniconda3-latest-Linux-x86_64.sh
-    sudo ./Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3
-    source ~/.bashrc
-fi
+#################################################################################################
+# build conda and SimpleElastix
+
+# TODO: we build SimpleElastix in separate 2.7 and 3.6 environments,
+# as currently we are not sure how to make the produced SimpleITK
+# shared object link to the local libraries in each separate local
+# environment
+
+./build_SimpleElastix.sh 2.7 || exit 1
+./build_SimpleElastix.sh 3.6 || exit 1
 
 #################################################################################################
 # pysto local environment: for python 2.7
@@ -181,106 +138,48 @@ pip install --upgrade .
 # install development tools
 tput setaf 1; echo "** Install development tools in local environment"; tput sgr0
 conda install -y spyder pytest
-pip install twine wheel setuptools --upgrade
+pip install --upgrade twine wheel setuptools
 
 #################################################################################################
-# pysto local environment: for python 3.6
-create_conda_local_environment pysto 3.6
+# pysto local environment: for python 2.7
+
+create_conda_local_environment pysto 2.7 || exit 1
 
 # switch to pysto local environment
-tput setaf 1; echo "** Switching to local environment: pysto_3.6"; tput sgr0
-source activate pysto_3.6
+tput setaf 1; echo "** Switching to local environment: pysto_2.7"; tput sgr0
+source activate pysto_2.7 || exit 1
 
 # install pysto code and dependencies
 tput setaf 1; echo "** Install pysto code and dependencies in local environment"; tput sgr0
-pip install --upgrade .
+pip install --upgrade . || exit 1
 
 # install development tools
 tput setaf 1; echo "** Install development tools in local environment"; tput sgr0
 conda install -y spyder pytest
-pip install twine wheel setuptools --upgrade
+pip install --upgrade twine wheel setuptools
 
-########################################################################
-# build SimpleElastix and install python wrappers
-
-# another type of local environment used by SimpleElastix's SuperBuild
-conda install -y virtualenv
-
-# TODO: we build SimpleElastix in separate 2.7 and 3.6 environments,
-# as currently we are not sure how to make the produced SimpleITK
-# shared object link to the local libraries in each separate local
-# environment
-create_conda_local_environment SimpleElastix 2.7
-create_conda_local_environment SimpleElastix 3.6
-
-# prepare to install SimpleElastix
-tput setaf 1; echo "** Clone or update SimpleElastix code"; tput sgr0
-cd ~/Downloads
-if [ -d SimpleElastix ]
-then
-   cd SimpleElastix
-   git pull
-else
-   git clone https://github.com/SuperElastix/SimpleElastix
-   cd SimpleElastix
-fi
-
-# we are going to build for each python version in a separate
-# directory. When you try to reuse the same directory, the build
-# restarts anyway
-mkdir -p build_2.7
-mkdir -p build_3.6
-
-# build for python 2.7
-source activate SimpleElastix_2.7 || exit 1
-cd ~/Downloads/SimpleElastix/build_2.7
-
-SITK_OPTS="\
--DWRAP_PYTHON:BOOL=ON \
--DPYTHON_EXECUTABLE:FILEPATH=$(get_python_executable) \
--DPYTHON_INCLUDE_DIR:PATH=$(get_python_include_dir) \
--DPYTHON_LIBRARY:FILEPATH=$(get_python_library) \
--DWRAP_DEFAULT:BOOL=OFF \
--DBUILD_TESTING:BOOL=OFF \
--DBUILD_EXAMPLES:BOOL=OFF \
--DBUILD_SHARED_LIBS:BOOL=OFF \
--DITK_BUILD_TESTING:BOOL=OFF \
--DITK_BUILD_EXAMPLES:BOOL=OFF \
--DITK_BUILD_DOCUMENTATION:BOOL=OFF \
--DSimpleITK_OPENMP:BOOL=ON"
-cmake $SITK_OPTS ../SuperBuild || exit 1
-make -j4 || exit 1
-
-# install python wrappers
-cd SimpleITK-build/Wrapping/Python/Packaging || exit 1
+# install SimpleElastix python wrappers
+cd ~/Downloads/SimpleElastix/build_2.7/SimpleITK-build/Wrapping/Python/Packaging || exit 1
 python setup.py install || exit 1
 
-# build for python 3.6
-source activate SimpleElastix_3.6 || exit 1
-cd ~/Downloads/SimpleElastix/build_3.6
+#################################################################################################
+# pysto local environment: for python 3.6
 
-SITK_OPTS="\
--DWRAP_PYTHON:BOOL=ON \
--DPYTHON_EXECUTABLE:FILEPATH=$(get_python_executable) \
--DPYTHON_INCLUDE_DIR:PATH=$(get_python_include_dir) \
--DPYTHON_LIBRARY:FILEPATH=$(get_python_library) \
--DWRAP_DEFAULT:BOOL=OFF \
--DBUILD_TESTING:BOOL=OFF \
--DBUILD_EXAMPLES:BOOL=OFF \
--DBUILD_SHARED_LIBS:BOOL=OFF \
--DITK_BUILD_TESTING:BOOL=OFF \
--DITK_BUILD_EXAMPLES:BOOL=OFF \
--DITK_BUILD_DOCUMENTATION:BOOL=OFF \
--DSimpleITK_OPENMP:BOOL=ON"
-cmake $SITK_OPTS ../SuperBuild || exit 1
-make -j4 || exit 1
+create_conda_local_environment pysto 3.6 || exit 1
 
-# switch to pysto to install SimpleElastix there
-source activate pysto_3.6
+# switch to pysto local environment
+tput setaf 1; echo "** Switching to local environment: pysto_3.6"; tput sgr0
+source activate pysto_3.6 || exit 1
 
-# install python wrappers
-cd SimpleITK-build/Wrapping/Python/Packaging || exit 1
+# install pysto code and dependencies
+tput setaf 1; echo "** Install pysto code and dependencies in local environment"; tput sgr0
+pip install --upgrade . || exit 1
+
+# install development tools
+tput setaf 1; echo "** Install development tools in local environment"; tput sgr0
+conda install -y spyder pytest
+pip install --upgrade twine wheel setuptools
+
+# install SimpleElastix python wrappers
+cd ~/Downloads/SimpleElastix/build_3.6/SimpleITK-build/Wrapping/Python/Packaging || exit 1
 python setup.py install || exit 1
-
-
-
