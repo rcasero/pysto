@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v1.3.0
+### Added
+
+- imgprocITK.imshow(): matplotlib.imshow extended for the ITK Image class.
+- module imgprocITK for functions that depend on SimpleITK.
+
 ## v1.2.0
 ### Added
 
