@@ -149,7 +149,7 @@ create_conda_local_environment() {
 # basic packages
 
 # ubuntu packages
-sudo apt-get install -y jq curl automake
+sudo apt-get install -y jq curl automake python3-docutils pandoc
 
 #################################################################################################
 # install conda package manager

@@ -33,6 +33,9 @@
 # check-download-url:
 #	Check that the download URL in setup.py points to the correct version.
 #
+# update-README-rst:
+#	Convert README.md to README.rst.
+#
 # github-tag:
 #	Create remote github tag for current commit, if not done yet.
 
@@ -100,6 +103,11 @@ check-download-url:
 		echo Pass: Download URL matches local version; \
 	fi
 
+update-README-rst: README.md
+	pandoc --from=markdown --to=rst --output=README.rst README.md
+	git commit README.rst -m "convert README.md to README.rst"
+	git push
+
 github-tag:
 	tput setaf 1 && echo "** Creating github tag if necessary" && tput sgr0
 	git fetch --tags
@@ -119,7 +127,7 @@ github-tag:
 		echo "Skipping: Remote tag already exists"; \
 	fi
 
-package: check-download-url github-tag
+package: check-download-url update-README-rst github-tag
 	tput setaf 1 && echo "** Creating release package and uploading to PyPI.org" && tput sgr0 
 	LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"`; \
 	LOCAL_VERSION_IS_IN_SERVER=`curl -s $(PACKAGE_JSON_URL) | jq  -r '.releases | keys | .[]' | grep $$LOCAL_VERSION`; \

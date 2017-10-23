@@ -22,6 +22,7 @@ setup(
         'test': ['pytest'],
     },
     description='Miscellaneous image processing functions',
+    long_description=read('README.rst'),
     url='https://github.com/rcasero/pysto',
     author='Ramón Casero',
     author_email='rcasero@gmail.com',
