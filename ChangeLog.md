@@ -4,8 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## vx.x.x
+
+### Changed
+- Allow developer to install the SimpleITK dependency either as
+  official SimpleITK package or build and install SimpleElastix.
+
 ## v1.3.2
 
+### Changed
 - README.md: increase code block tab by 1 so that it translates
   correctly into PyPI HTML.
 
@@ -14,49 +21,48 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - minor
 
 ## v1.3.0
-### Added
 
+### Added
 - imgprocITK.imshow(): matplotlib.imshow extended for the ITK Image class.
 - module imgprocITK for functions that depend on SimpleITK.
 
 ### Changed
-
 - Clarify help header of block_split().
 - In setup.py, link long_description to README.md.
 
 ## v1.2.0
-### Added
 
+### Added
 - improc.block_stack(): Stack a list of blocks to reassemble the
   original array. This function is the opposite of block_split().
 - Makefile: Simplify common development tasks (test, package).
 
 ## v1.1.3
-### Changed
 
+### Changed
 - __init__: Fix bug, missing encoding for file.
 - tests/*.py: Fix bug, typo in directory for data.
 - pysto/improc.py: Fix bug. np.divide in Python 2 is integer division
 - Make compatible and add local environment for python 2.7.
 
 ## v1.1.2
-### Changed
 
+### Changed
 - setup.py: Improve metainformation.
 
 ## v1.1.1
-### Changed
 
+### Changed
 - ChangeLog.md: Update ChangeLog.
 
 ## v1.1.0
-### Added
 
+### Added
 - imgproc.block_split(): "Split an nd-array into blocks".
 
 ## v1.0.0
-### Added
 
+### Added
 - imgproc.matchHist(): "Modify image intensities to match the
   histogram of a reference image" by
   [rcasero](https://github.com/rcasero)
