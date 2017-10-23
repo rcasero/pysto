@@ -44,7 +44,7 @@ along with this program.  If not, see
 ###############################################################################
 
 import SimpleITK as sitk
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 ###############################################################################
 ## block_split
