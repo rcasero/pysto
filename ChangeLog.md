@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v1.3.2
+
+- README.md: increase code block tab by 1 so that it translates
+  correctly into PyPI HTML.
+
+## v1.3.1
+
+- minor
+
 ## v1.3.0
 ### Added
 
