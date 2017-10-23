@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - imgprocITK.imshow(): matplotlib.imshow extended for the ITK Image class.
 - module imgprocITK for functions that depend on SimpleITK.
 
+### Changed
+
+- Clarify help header of block_split().
+- In setup.py, link long_description to README.md.
+
 ## v1.2.0
 ### Added
 
