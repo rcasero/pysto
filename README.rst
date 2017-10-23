@@ -64,14 +64,24 @@ Install pysto project for development
 
        git clone https://github.com/rcasero/pysto.git
 
-2. Run ``install_dependencies.sh`` so it creates local environments for
-   python 2.7 and 3.6, and installs python dependencies and development
-   tools
+2. Run ``install_dependencies.sh`` to install development tools, create
+   local environments for python 2.7 and 3.6, and install python
+   dependencies. ``pysto`` depends on SimpleITK, and there are two
+   options:
 
-   ::
+   1. Install the official SimpleITK package
 
-       cd pysto
-       ./install_dependencies.sh
+      ::
+
+          cd pysto
+          ./install_dependencies.sh
+
+   2. Install the official SimpleITK package
+
+      ::
+
+          cd pysto
+          ./install_dependencies.sh
 
 Developing source code for pysto
 --------------------------------

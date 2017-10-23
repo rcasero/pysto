@@ -45,12 +45,19 @@ installing it system-wide, you may need to run the command as root)
 
         git clone https://github.com/rcasero/pysto.git
 
-1. Run `install_dependencies.sh` so it creates local environments for
-python 2.7 and 3.6, and installs python dependencies and development
-tools
+1. Run `install_dependencies.sh` to install development tools, create
+local environments for python 2.7 and 3.6, and install python
+dependencies. `pysto` depends on SimpleITK, and there are two options:
 
-        cd pysto
-        ./install_dependencies.sh
+    1. Install the official SimpleITK package
+
+            cd pysto
+            ./install_dependencies.sh
+
+    1. Build and install SimpleElastix, which is an extension of SimpleITK
+
+            cd pysto
+            ./install_dependencies.sh SimpleElastix
 
 ## Developing source code for pysto
 
