@@ -10,25 +10,25 @@ The name is a play of words on "pisto", a Manchego dish made of tomatoes, onions
 
 1. Simply run from your local environment or whole system
 
-        pip install pysto
+       pip install pysto
 
 ## Installing pysto from the cloned github repository
 
 1. Clone the pysto repository
 
-        git clone https://github.com/rcasero/pysto.git
+       git clone https://github.com/rcasero/pysto.git
 
 1. Activate the local environment of the other project, or you can
 also work without a local environment. For example, to activate a
 local conda environment called "myproject"
 
-        source activate myproject
+       source activate myproject
 
 1. Install pysto from the pysto root directory (note that if you are
 installing it system-wide, you may need to run the command as root)
 
-        cd pysto
-        pip install .
+       cd pysto
+       pip install .
 
 ## Uninstalling pysto
 
@@ -42,20 +42,20 @@ installing it system-wide, you may need to run the command as root)
 
 1. Clone the pysto repository
 
-        git clone https://github.com/rcasero/pysto.git
+       git clone https://github.com/rcasero/pysto.git
 
 1. Run `install_dependencies.sh` so it creates local environments for
 python 2.7 and 3.6, and installs python dependencies and development
 tools
 
-        cd pysto
-        ./install_dependencies.sh
+       cd pysto
+       ./install_dependencies.sh
 
 ## Developing source code for pysto
 
 1. Activate one of the pysto local environments
 
-        source activate pysto_3.6
+       source activate pysto_3.6
 
 1. If you are making changes to the code, you want your python
 environment to import the code you are working with in
@@ -77,7 +77,7 @@ environment. Thus, add the project's source directory to `PYTHONPATH`
 1. While developing, you can run all tests (both for python 2.7 and
 3.6) from the command line with
 
-        make test
+       make test
 
 1. You need to have a local file `~/.pypirc` (replace `<the password>`
 by the password). This will be used by `twine` to release packages to PyPI
