@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## v1.3.4
 
 ### Changed
-- Makefile: fix bug, missing test targets.
+- Makefile: fix bugs, missing test targets
+- Makefile: error with README.rst rule when README.md hasn't been edited
 - imgprocITK.imshow(): fix bug, wrong indirection level passing kwargs to plt.imshow().
 - test_imshow.py: add kwargs argument, so that it gets tested.
 
