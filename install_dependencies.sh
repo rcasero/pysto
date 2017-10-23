@@ -7,55 +7,33 @@
 #    2.7 ("pysto_2.7") and 3.6 ("pysto_3.6"), and install Ubuntu and
 #    python dependencies.
 #
+#    This is a script for developers only. Users will get the
+#    simpleitk installed as a dependency when they run `pip install
+#    pysto`.
+#
 #
 #    Syntax:
 #    ====================================================================
 #
 #    ./install_dependencies.sh
 #    ./install_dependencies.sh SimpleITK
+#
+#         This installs developer programs, as well as package
+#         dependencies. One of the dependencies is SimpleITK. With
+#         either syntax above, we install the official SimpleITK
+#         package.
+#
 #    ./install_dependencies.sh SimpleElastix
 #
-#    An important dependency is SimpleITK, and by default, this script
-#    installs the official conda simpleitk package.
+#         However, we may prefer installing SimpleElastix, an
+#         extension of SimpleITK. In this latter case, there's no
+#         pip/conda package, so we have to download and build the
+#         SimpleElastix project. This process is delegated to script
+#         build_SimpleElastix.sh.
 #
-#    However, we may prefer installing SimpleElastix, an extension of
-#    SimpleITK. In this latter case, there's no pip/conda package, so
-#    we have to download and build the SimpleElastix project.
 #
-#
-#    SimpleElastix/SimpleITK:
+#    Developer notes:
 #    ====================================================================
-#
-#    Some parts of pysto require SimpleITK. This can be installed
-#    either with
-#
-#         conda install -c simpleitk simpleitk
-#
-#    or
-#
-#         pip install simpleitk
-#
-#    However, we are working in another project were we use image
-#    registration with SimpleElastix. SimpleElastix is an externsion
-#    of SimpleITK that has no pip/conda package, and needs to be built
-#    by hand.
-#
-#    Thus, in this script we download, build and install
-#    SimpleElastix.
-#
-#    We do it in separate local environments, so that other projects
-#    external to pysto can install SimpleElastix without having to
-#    rebuild it, just by running
-#
-#        source activate my_other_project
-#        cd ~/Downloads/SimpleElastix/build_2.7/SimpleITK-build/Wrapping/Python/Packaging
-#        python setup.py install
-#
-#    or
-#
-#        source activate my_other_project
-#        cd ~/Downloads/SimpleElastix/build_3.6/SimpleITK-build/Wrapping/Python/Packaging
-#        python setup.py install
 #
 #    Some design decisions:
 #
@@ -123,8 +101,6 @@ else
     tput sgr0
     exit 1
 fi
-
-# check input arguments
 
 #################################################################################################
 # auxiliary functions
@@ -206,25 +182,42 @@ conda install -y spyder pytest
 pip install --upgrade twine wheel setuptools
 
 #################################################################################################
-# build and install SimpleElastix
+# install SimpleITK or build and install SimpleElastix (which is SimpleITK extended with more functions)
 
-# TODO: we build SimpleElastix in separate 2.7 and 3.6
-# environments. Ideally, we would like to do the following:
-#
-# 1. build without python wrappers (very slow)
-# 2. generate python wrappers for python 2.7 (fast)
-# 3. generate python wrappers for python 3.6 (fast)
-#
-# But currently, it seems that running cmake for 1 and then for 2 or 3
-# triggers a full rebuild
+# pysto requires
 
-./build_SimpleElastix.sh 2.7 || exit 1
-./build_SimpleElastix.sh 3.6 || exit 1
+if [ "$SIMPLEITK_PROJ" == SimpleElastix ]
+then
 
-# install SimpleElastix python wrappers
-cd ~/Downloads/SimpleElastix/build_2.7/SimpleITK-build/Wrapping/Python/Packaging || exit 1
-python setup.py install || exit 1
+    # TODO: we build SimpleElastix in separate 2.7 and 3.6
+    # environments. Ideally, we would like to do the following:
+    #
+    # 1. build without python wrappers (very slow)
+    # 2. generate python wrappers for python 2.7 (fast)
+    # 3. generate python wrappers for python 3.6 (fast)
+    #
+    # But currently, it seems that running cmake for 1 and then for 2 or 3
+    # triggers a full rebuild
+    
+    ./build_SimpleElastix.sh 2.7 || exit 1
+    ./build_SimpleElastix.sh 3.6 || exit 1
 
-# install SimpleElastix python wrappers
-cd ~/Downloads/SimpleElastix/build_3.6/SimpleITK-build/Wrapping/Python/Packaging || exit 1
-python setup.py install || exit 1
+    # install SimpleElastix python wrappers
+    source activate pysto_2.7 || exit 1
+    cd ~/Downloads/SimpleElastix/build_2.7/SimpleITK-build/Wrapping/Python/Packaging || exit 1
+    python setup.py --upgrade install || exit 1
+    
+    # install SimpleElastix python wrappers
+    source activate pysto_3.6 || exit 1
+    cd ~/Downloads/SimpleElastix/build_3.6/SimpleITK-build/Wrapping/Python/Packaging || exit 1
+    python setup.py --upgrade install || exit 1
+
+else
+
+    source activate pysto_2.7 || exit 1
+    pip install --upgrade simpleitk || exit 1
+    
+    source activate pysto_3.6 || exit 1
+    pip install --upgrade simpleitk || exit 1
+    
+fi
