@@ -172,24 +172,6 @@ fi
 
 #################################################################################################
 # pysto local environment: for python 2.7
-create_conda_local_environment pysto 2.7
-
-# switch to pysto local environment
-tput setaf 1; echo "** Switching to local environment: pysto_2.7"; tput sgr0
-source activate pysto_2.7
-
-# install pysto code and dependencies
-tput setaf 1; echo "** Install pysto code and dependencies in local environment"; tput sgr0
-pip install --upgrade .
-
-# install development tools
-tput setaf 1; echo "** Install development tools in local environment"; tput sgr0
-conda install -y spyder pytest
-pip install --upgrade twine wheel setuptools
-
-#################################################################################################
-# pysto local environment: for python 2.7
-
 create_conda_local_environment pysto 2.7 || exit 1
 
 # switch to pysto local environment
@@ -204,10 +186,6 @@ pip install --upgrade . || exit 1
 tput setaf 1; echo "** Install development tools in local environment"; tput sgr0
 conda install -y spyder pytest
 pip install --upgrade twine wheel setuptools
-
-# install SimpleElastix python wrappers
-cd ~/Downloads/SimpleElastix/build_2.7/SimpleITK-build/Wrapping/Python/Packaging || exit 1
-python setup.py install || exit 1
 
 #################################################################################################
 # pysto local environment: for python 3.6
@@ -227,23 +205,26 @@ tput setaf 1; echo "** Install development tools in local environment"; tput sgr
 conda install -y spyder pytest
 pip install --upgrade twine wheel setuptools
 
-# install SimpleElastix python wrappers
-cd ~/Downloads/SimpleElastix/build_3.6/SimpleITK-build/Wrapping/Python/Packaging || exit 1
-python setup.py install || exit 1
-
-
-
-
-
-
 #################################################################################################
-# build SimpleElastix
+# build and install SimpleElastix
 
-# TODO: we build SimpleElastix in separate 2.7 and 3.6 environments,
-# as currently we are not sure how to make the produced SimpleITK
-# shared object link to the local libraries in each separate local
-# environment
+# TODO: we build SimpleElastix in separate 2.7 and 3.6
+# environments. Ideally, we would like to do the following:
+#
+# 1. build without python wrappers (very slow)
+# 2. generate python wrappers for python 2.7 (fast)
+# 3. generate python wrappers for python 3.6 (fast)
+#
+# But currently, it seems that running cmake for 1 and then for 2 or 3
+# triggers a full rebuild
 
 ./build_SimpleElastix.sh 2.7 || exit 1
 ./build_SimpleElastix.sh 3.6 || exit 1
 
+# install SimpleElastix python wrappers
+cd ~/Downloads/SimpleElastix/build_2.7/SimpleITK-build/Wrapping/Python/Packaging || exit 1
+python setup.py install || exit 1
+
+# install SimpleElastix python wrappers
+cd ~/Downloads/SimpleElastix/build_3.6/SimpleITK-build/Wrapping/Python/Packaging || exit 1
+python setup.py install || exit 1
