@@ -76,12 +76,13 @@ Install pysto project for development
           cd pysto
           ./install_dependencies.sh
 
-   2. Install the official SimpleITK package
+   2. Build and install SimpleElastix, which is an extension of
+      SimpleITK
 
       ::
 
           cd pysto
-          ./install_dependencies.sh
+          ./install_dependencies.sh SimpleElastix
 
 Developing source code for pysto
 --------------------------------
