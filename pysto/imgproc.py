@@ -33,7 +33,7 @@ along with this program.  If not, see
 ## Summary of functions in this module:
 ##
 ##   block_split:
-##      Split an nd-array into blocks.
+##      Split an nd-array into blocks with or without overlapping between the blocks.
 ##
 ##   imfuse: 
 ##      Composite of two images.
@@ -54,14 +54,44 @@ import itertools
 def block_split(x, nblocks, by_reference=False, pad_width=0, mode='constant', **kwargs):
     """Split an nd-array into blocks.
     
-    Split an N-dimensional array into blocks. This syntax returns one slice 
-    object per block
+    Split an N-dimensional array into blocks with or without overlapping 
+    between the blocks.
     
-        block_slices, blocks, xout = block_split(x, nblocks)
+    The overlap is set with parameter 'pad_width', in voxel units (default 0). 
+    Overlap is useful in image processing to avoid "seams" or a "mosaic" effect
+    when the blocks are put back together.
     
-    so that blocks[i]=xout[block_slices[i]]. If the array length is not a
-    multiple of the block length, one block will have a slightly different size
-    as the others, as decided by numpy.array_split().
+    The basic syntax (no overlap) is
+    
+        block_slices, blocks = block_split(x, nblocks, by_reference=False)
+        
+    Output 'block_slices' is a list of slice objects such that 
+    
+        blocks[i]=x[block_slices[i]]
+    
+    Note that if the array length is not a multiple of the block length, one 
+    block will have a slightly different size as the others, as decided by 
+    numpy.array_split().
+    
+    When pad_width>0, the array itself needs to be padded at the borders. This
+    uses the same parameters as numpy.pad(). 
+    
+        block_slices, blocks, xout = block_split(x, nblocks, pad_width=0, mode='constant', **kwargs)
+    
+    Some examples:
+    
+        block_slices, blocks, xout = block_split(x, nblocks, pad_width=(2,3), mode='constant', constant_values=(4, 6))
+        block_slices, blocks, xout = block_split(x, nblocks, pad_width=(2, 3), mode='edge')
+        block_slices, blocks, xout = block_split(x, nblocks, pad_width=(2, 3), mode='linear_ramp', end_values=(5, -4))
+        block_slices, blocks, xout = block_split(x, nblocks, pad_width=(2,), mode='maximum')
+        block_slices, blocks, xout = block_split(x, nblocks, pad_width=(2, 3), mode='reflect', reflect_type='odd')
+        ...
+    
+    See numpy.pad() documentation for all options: https://docs.scipy.org/doc/numpy/reference/generated/numpy.pad.html#numpy.pad.
+    
+    Output 'xout' returns the padded array. The blocks the correspond to
+    
+        blocks[i]=xout[block_slices[i]]
     
     Args:
         x: nd-array (numpy).
@@ -80,20 +110,7 @@ def block_split(x, nblocks, by_reference=False, pad_width=0, mode='constant', **
         
         pad_width, mode, ...: Padding parameter. They are applied to each 
         block, adding elements around the border of x as required. These 
-        parameters are the same used by function numpy.pad. Some examples:
-            
-            pad_width=(2,3), mode='constant', constant_values=(4, 6)
-            pad_width=(2, 3), mode='edge'
-            pad_width=(2, 3), mode='linear_ramp', end_values=(5, -4)
-            pad_width=(2,), mode='maximum'
-            pad_width=(2,), mode='mean'
-            pad_width=(2,), mode='median'
-            pad_width=((3, 2), (2, 3)), mode='minimum'
-            pad_width=(2, 3), mode='reflect'
-            pad_width=(2, 3), mode='reflect', reflect_type='odd'
-            pad_width=(2, 3), mode='symmetric'
-            pad_width=(2, 3), mode='symmetric', reflect_type='odd'
-            pad_width=(2, 3), mode='wrap'
+        parameters are the same used by function numpy.pad.
         
     Returns:
         block_slices: List of slice objects. Each slice applied to x produces 
