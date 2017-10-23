@@ -4,7 +4,7 @@
 @file: pysto/tests/test_imfuse.py
 @package: pysto
 @author: Ramón Casero <rcasero@gmail.com>
-@copyright: (C) 2017  Ramón Casero <rcasero@gmail.com>
+@copyright: © 2017  Ramón Casero <rcasero@gmail.com>
 @license: GPL v3
 @version: 0.1.1
 

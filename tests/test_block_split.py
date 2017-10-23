@@ -4,7 +4,7 @@
 @file: pysto/tests/test_block_split.py
 @package: pysto
 @author: Ramón Casero <rcasero@gmail.com>
-@copyright: (C) 2017  Ramón Casero <rcasero@gmail.com>
+@copyright: © 2017  Ramón Casero <rcasero@gmail.com>
 @license: GPL v3
 @version: 1.2.0
 

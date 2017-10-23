@@ -10,7 +10,7 @@ Created on Mon Sep 25 13:35:45 2017
 @file: pysto/tests/test_block_split.py
 @package: pysto
 @author: Ramón Casero <rcasero@gmail.com>
-@copyright: (C) 2017  Ramón Casero <rcasero@gmail.com>
+@copyright: © 2017  Ramón Casero <rcasero@gmail.com>
 @license: GPL v3
 @version: 1.0.0
 
