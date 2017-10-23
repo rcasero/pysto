@@ -2,7 +2,8 @@
 
 `pysto` are a few miscellaneous processing python functions.
 
-The name is a play of words on "pisto", a Manchego dish made of tomatoes, onions, courgettes, green and red peppers and olive oil.
+The name is a play of words on "pisto", a Manchego dish made of
+tomatoes, onions, courgettes, green and red peppers and olive oil.
 
 # User instructions
 
