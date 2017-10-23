@@ -77,4 +77,4 @@ def imshow(im, **kwargs):
             )
     
     # pass the call to matplotlib.imshow
-    return plt.imshow(sitk.GetArrayFromImage(im), extent=extent, *kwargs)
+    return plt.imshow(sitk.GetArrayFromImage(im), extent=extent, **kwargs)

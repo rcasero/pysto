@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v1.3.4
+
+### Changed
+- Makefile: fix bug, missing test targets.
+- imgprocITK.imshow(): fix bug, wrong indirection level passing kwargs to plt.imshow().
+- test_imshow.py: add kwargs argument, so that it gets tested.
+
 ## v1.3.3
 
 ### Changed

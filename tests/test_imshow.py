@@ -50,4 +50,4 @@ def test_imshow():
     im.SetOrigin((10.0, 5.0))
     
     # plot image
-    pitk.imshow(im)
+    pitk.imshow(im, origin='lower')

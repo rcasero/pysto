@@ -57,9 +57,12 @@
 
 SHELL := /bin/bash
 
-SRCFILES = pysto/imgproc.py
+SRCFILES = pysto/imgproc.py \
+	pysto/imgprocITK.py
 TESTFILES = tests/test_block_split.py \
+	tests/test_block_stack.py \
 	tests/test_imfuse.py \
+	tests/test_imshow.py\
 	tests/test_matchHist.py
 
 PACKAGE_JSON_URL = https://pypi.python.org/pypi/pysto/json
