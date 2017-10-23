@@ -1,6 +1,18 @@
 # coding: utf-8
 
 from setuptools import setup, find_packages
+import os
+import codecs
+
+def read(fname):
+    try:
+        content = codecs.open(
+            os.path.join(os.path.dirname(__file__), fname),
+            encoding='utf-8'
+            ).read()
+    except Exception:
+        content = ''
+    return content
 
 setup(
     name='pysto',
@@ -12,6 +24,7 @@ setup(
         'matplotlib>=2.0',
         'numpy>=1.13',
         'opencv-python>=3.3.0',
+        'simpleitk>=1.0.1'
     ],
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
