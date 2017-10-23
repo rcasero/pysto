@@ -16,8 +16,8 @@ def read(fname):
 
 setup(
     name='pysto',
-    version='1.3.3',
-    download_url = 'https://github.com/rcasero/pysto/archive/1.3.3.tar.gz',
+    version='1.3.4',
+    download_url = 'https://github.com/rcasero/pysto/archive/1.3.4.tar.gz',
     packages=find_packages(),
     python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*',
     install_requires=[
