@@ -135,7 +135,8 @@ package: check-download-url README.rst github-tag
 	LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"`; \
 	LOCAL_VERSION_IS_IN_SERVER=`curl -s $(PACKAGE_JSON_URL) | jq  -r '.releases | keys | .[]' | grep $$LOCAL_VERSION`; \
 	if [ -z $$LOCAL_VERSION_IS_IN_SERVER ]; then \
-		python setup.py sdist bdist_wheel \
+		python setup.py check \
+		&& python setup.py sdist bdist_wheel \
 		&& twine upload --repository pypi dist/*$$LOCAL_VERSION*; \
 	else \
 		echo "Local version $$LOCAL_VERSION is already on PyPI server"; \
@@ -146,7 +147,8 @@ test-package: check-download-url github-tag
 	LOCAL_VERSION=`grep -e "^    version" setup.py | grep -oP "(?<=').*?(?=')"`; \
 	LOCAL_VERSION_IS_IN_SERVER=`curl -s $(TEST_PACKAGE_JSON_URL) | jq  -r '.releases | keys | .[]' | grep $$LOCAL_VERSION`; \
 	if [ -z $$LOCAL_VERSION_IS_IN_SERVER ]; then \
-		python setup.py sdist bdist_wheel \
+		python setup.py check \
+		&& python setup.py sdist bdist_wheel \
 		&& twine upload --repository pypitest dist/*$$LOCAL_VERSION*; \
 	else \
 		echo "Local version $$LOCAL_VERSION is already on PyPI test server"; \
