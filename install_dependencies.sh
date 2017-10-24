@@ -160,7 +160,7 @@ pip install --upgrade . || exit 1
 
 # install development tools
 tput setaf 1; echo "** Install development tools in local environment"; tput sgr0
-conda install -y spyder pytest
+conda install -y spyder pytest pillow
 pip install --upgrade twine wheel setuptools
 
 #################################################################################################
@@ -178,7 +178,7 @@ pip install --upgrade . || exit 1
 
 # install development tools
 tput setaf 1; echo "** Install development tools in local environment"; tput sgr0
-conda install -y spyder pytest
+conda install -y spyder pytest pillow
 pip install --upgrade twine wheel setuptools
 
 #################################################################################################
