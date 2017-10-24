@@ -59,11 +59,7 @@ SHELL := /bin/bash
 
 SRCFILES = pysto/imgproc.py \
 	pysto/imgprocITK.py
-TESTFILES = tests/test_block_split.py \
-	tests/test_block_stack.py \
-	tests/test_imfuse.py \
-	tests/test_imshow.py\
-	tests/test_matchHist.py
+TESTFILES := $(wildcard tests/test_*.py)
 
 PACKAGE_JSON_URL = https://pypi.python.org/pypi/pysto/json
 TEST_PACKAGE_JSON_URL = https://testpypi.python.org/pypi/pysto/json
