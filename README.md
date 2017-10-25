@@ -7,29 +7,11 @@ tomatoes, onions, courgettes, green and red peppers and olive oil.
 
 # User instructions
 
-## Installing pysto with pip
+## Installing pysto as a user
 
-1. Simply run from your local environment or whole system
+1. Install the latest pysto PyPI package
 
         pip install pysto
-
-## Installing pysto from the cloned github repository
-
-1. Clone the pysto repository
-
-        git clone https://github.com/rcasero/pysto.git
-
-1. Activate the local environment of the other project, or you can
-also work without a local environment. For example, to activate a
-local conda environment called "myproject"
-
-        source activate myproject
-
-1. Install pysto from the pysto root directory (note that if you are
-installing it system-wide, you may need to run the command as root)
-
-        cd pysto
-        pip install .
 
 ## Uninstalling pysto
 
@@ -37,55 +19,38 @@ installing it system-wide, you may need to run the command as root)
 
         pip uninstall pysto
 
+1. If you get the error `pip error: Cannot locate installed-files.txt`, remove pysto manually. For example, if you are in a conda environment
+
+        rm -rf ${CONDA_PREFIX}/lib/python3.6/site-packages/pysto*
+
 # Developer instructions
 
-## Install pysto project for development
+We provide scripts `install_dependencies.sh` and `build_SimpleElastix.sh` to help install necessary software, and a `Makefile` to simplify testing and releasing.
 
-1. Clone the pysto repository
+## Installing pysto as a developer
+
+1. If you want to develop code for pysto, instead of installing the PyPI package, you want to clone the github repository
 
         git clone https://github.com/rcasero/pysto.git
 
-1. Run `install_dependencies.sh` to install development tools, create
-local environments for python 2.7 and 3.6, and install python
-dependencies. `pysto` depends on SimpleITK, and there are two options:
+1. Install the development dependencies (this creates local conda environments `pysto_2.7` and `pysto_3.6`, for python 2.7 and 3.6, respectively and installs several Ubuntu and python packages). There are two options, depending on what SimpleITK you want:
+   1. If you are happy with the official SimpleITK package, just run (this is very fast)
 
-    1. Install the official SimpleITK package
+           cd pysto
+           ./install_dependencies.sh
 
-            cd pysto
-            ./install_dependencies.sh
+   1. If you prefer [SimpleElastix](https://simpleelastix.github.io/) (an extension of [SimpleITK](http://www.simpleitk.org/) with [elastix registration software](http://elastix.isi.uu.nl/))
 
-    1. Build and install SimpleElastix, which is an extension of SimpleITK
+           cd pysto
+           ./install_dependencies.sh SimpleElastix
 
-            cd pysto
-            ./install_dependencies.sh SimpleElastix
+1. Install the pysto code to one or both of the local environments
 
-## Developing source code for pysto
-
-1. Activate one of the pysto local environments
-
-        source activate pysto_3.6
-
-1. If you are making changes to the code, you want your python
-environment to import the code you are working with in
-`~/Software/pysto`, not the package installed in your local conda
-environment. Thus, add the project's source directory to `PYTHONPATH`
-
-        export PYTHONPATH=~/Software/pysto:$PYTHONPATH
-
-1. Launch the development IDE, e.g.
-
-        spyder&
-
-1. In your code, import the pysto modules/functions in the usual way, e.g.
-
-        import pysto.imgproc as pymg        
-        [...]
-        imf = pymg.imfuse(im1, im2)
+        conda activate pysto_2.7
+        pip install --upgrade .
         
-1. While developing, you can run all tests (both for python 2.7 and
-3.6) from the command line with
-
-        make test
+        conda activate pysto_3.6
+        pip install --upgrade .
 
 1. You need to have a local file `~/.pypirc` (replace `<the password>`
 by the password). This will be used by `twine` to release packages to PyPI
@@ -108,19 +73,41 @@ by the password). This will be used by `twine` to release packages to PyPI
 
         chmod 600 ~/.pypirc
 
-## Uninstalling pysto
+## Uninstalling pysto as a developer
 
-1. Uninstall the package
+1. Delete the conda local environments (this will delete all the python packages inside the environments)
 
-        pip uninstall pysto
+        source deactivate
+        conda remove --name pysto_2.7 --all
+        conda remove --name pysto_3.6 --all
+
+## Developing source code for pysto
+
+1. Activate one of the pysto local environments
+
+        cd ~/Software/pysto
+        source activate pysto_3.6
+
+1. Launch the development IDE, e.g.
+
+        spyder&
+
+1. In your code, import the pysto modules/functions in the usual way, e.g.
+
+        import pysto.imgproc as pym
+        import pysto.imgprocITK as pymITK
+        [...]
+        imf = pym.imfuse(im1, im2)
+        pymITK.imshow(im3)
+        
+1. While developing, you can run all tests (both for python 2.7 and
+3.6) from the command line with
+
+        make test
 
 ## Making a new release (to GitHub and PyPI)
 
-We provide a `Makefile` to simplify testing and releasing.
-
-1. Run all tests for python 2.7 and 3.6 to make sure nothing obvious got broken
-
-        make test
+1. We assume that you have made some changes to the code, and commit/pushed them to the GitHub repository.
 
 1. Update `version` and `download_url` in `setup.py` with new release number. If something else has changed in the project, update other relevant fields in `setup.py`.
 
