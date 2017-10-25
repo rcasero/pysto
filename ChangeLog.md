@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## vx.x.x
+
+## Changed
+- README.md: Simplify and rewrite notes for users vs. developers.
+
 ## v1.4.1
 
 ## Changed
