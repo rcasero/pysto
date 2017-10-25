@@ -114,62 +114,33 @@ by the password). This will be used by `twine` to release packages to PyPI
 
         pip uninstall pysto
 
-## Releasing a new version of pysto to PyPI
+## Making a new release (to GitHub and PyPI)
 
 We provide a `Makefile` to simplify testing and releasing.
 
-1. Run tests to make sure nothing obvious got broken
+1. Run all tests for python 2.7 and 3.6 to make sure nothing obvious got broken
 
         make test
 
-1. Commit and push all the code that should go in the release to
-github.
+1. Update `version` and `download_url` in `setup.py` with new release number. If something else has changed in the project, update other relevant fields in `setup.py`.
 
-1. Update `setup.py` with release version, any new dependencies, the
-new download URL, changes to the description...
-
-        from setuptools import setup, find_packages
-        
         setup(
-            name='pysto',
+            ...
             version='1.0.0',
-            download_url = 'https://github.com/rcasero/pysto/archive/1.0.0.tar.gz',
-            packages=find_packages(),
-            python_requires='>=3.6',
-            install_requires=['matplotlib>=2.0','numpy>=1.13','opencv-python>=3.3.0'],
-            description='Miscellanea image processing functions',
-            url='https://github.com/rcasero/pysto',
-            author='Ramón Casero',
-            author_email='rcasero@gmail.com',
-            license='GPL v3',
+            download_url='https://github.com/rcasero/pysto/archive/1.0.0.tar.gz',
+            ...
         )
 
-1. Update `ChangeLog.md` with the main changes to this release. For example,
+1. Update `ChangeLog.md` with the main changes to this release, in markdown format.
 
-        ## v1.0.0
-        ### Added
-        
-        - imgproc.matchHist(): "Modify image intensities to match the
-          histogram of a reference image" by
-          [rcasero](https://github.com/rcasero)
-        - imgproc.imfuse(): "Composite of two images" by
-          [rcasero](https://github.com/rcasero)
-        - testdata/*.png: Stereo cloud images with ROI masks (left_mask.png,
-          left.png, right_mask.png, right.png) by
-          [rcasero](https://github.com/rcasero)
+1. Commit and push all changes to the repository.
 
-1. Tag the release in github, create the package/wheel and upload to the test PyPI server
+1. Make a test package. (This will also tag the release in github, create the test package/wheel and upload to the test PyPI server), that you can see in https://test.pypi.org/project/pysto/
 
         make test-package
 
-1. You should be able to see your package in
-
-        https://test.pypi.org/project/pysto/
-
-1. If everything goes well, upload to PyPI Live
+1. If everything has gone well, make the release package, that you can see in https://pypi.org/project/pysto/
 
         make package
 
-1. You should be able to see your package in
-
-        https://pypi.org/project/pysto/
+1. Go to [pysto GitHub release tags](https://github.com/rcasero/pysto/tags), click on "Edit release notes" and copy and paste the new entry from the `ChangeLog.md`
