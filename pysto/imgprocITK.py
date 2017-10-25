@@ -12,7 +12,7 @@ Created on Wed Oct 18 15:50:02 2017
 @author: Ramón Casero <rcasero@gmail.com>
 @copyright: © 2017  Ramón Casero <rcasero@gmail.com>
 @license: GPL v3
-@version: 1.0.0
+@version: 1.0.1
 
 This file is part of pysto.
 
@@ -71,14 +71,23 @@ def imshow(im, **kwargs):
         Same as matplotlib.imshow.
     """
 
-    # compute extent of the image
     origin = im.GetOrigin()
     spacing = im.GetSpacing()
     size = im.GetSize()
-    extent = (
-            origin[0], origin[0] + (size[0]-1) * spacing[0],
-            origin[1], origin[1] + (size[1]-1) * spacing[1]
-            )
+
+    # when origin='lower', the image will be upside down, so we need to take
+    # that into account for the vertical axis
+    if ('origin' in kwargs) and (kwargs['origin'] == 'lower'):
+        extent = (
+                origin[0], origin[0] + (size[0]-1) * spacing[0],
+                origin[1] + (size[1]-1) * spacing[1], origin[1]
+                )
+    else:
+        extent = (
+                origin[0], origin[0] + (size[0]-1) * spacing[0],
+                origin[1], origin[1] + (size[1]-1) * spacing[1]
+                )
+
     
     # pass the call to matplotlib.imshow
     return plt.imshow(sitk.GetArrayFromImage(im), extent=extent, **kwargs)

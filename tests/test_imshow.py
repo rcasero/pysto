@@ -6,7 +6,7 @@
 @author: Ramón Casero <rcasero@gmail.com>
 @copyright: © 2017  Ramón Casero <rcasero@gmail.com>
 @license: GPL v3
-@version: 0.1.0
+@version: 0.1.1
 
 This file is part of pysto.
 
@@ -51,3 +51,4 @@ def test_imshow():
     
     # plot image
     pitk.imshow(im, origin='lower')
+    pitk.imshow(im)
