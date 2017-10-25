@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v1.4.1
+
+## Changed
+- imgprocITK.imshow(): Fix bug. When origin='lower', the image will be
+  upside down, so we need to take that into account for the vertical
+  axis
+
 ## v1.4.0
 
 ### Added
