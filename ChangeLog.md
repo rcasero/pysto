@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## vx.x.x
 
 ## Changed
+
+- imgproc.imfuse(): Add warning if both images don't have the same
+  pixel type, because in that case, they produce visualisation
+  artifacts.
 - README.md: Simplify and rewrite notes for users vs. developers.
 
 ## v1.4.1

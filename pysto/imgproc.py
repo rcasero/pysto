@@ -6,7 +6,7 @@
 @author: Ramón Casero <rcasero@gmail.com>
 @copyright: © 2017  Ramón Casero <rcasero@gmail.com>
 @license: GPL v3
-@version: 1.3.0
+@version: 1.3.1
 
 This file is part of pysto.
 
@@ -326,6 +326,10 @@ def imfuse(a, b):
         a = cv2.cvtColor(a, cv2.COLOR_RGB2GRAY)
     if (len(b.shape)>2):
         b = cv2.cvtColor(b, cv2.COLOR_RGB2GRAY)
+    
+    # check that both images have the same pixel type
+    if type(a) is not type(b):
+        raise Warning('Pixel types are different in both images, and should be the same to avoid display artifacts')
     
     # get size of image that contains both images
     sz = np.maximum(a.shape, b.shape)
