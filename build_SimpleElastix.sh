@@ -11,14 +11,14 @@
 #
 # This script downloads the SimpleElastix code to
 #
-#     ~/Downloads/SimpleElastix
+#     ~/Software/SimpleElastix
 #
 # and creates a SimpleElastix_pv local environment to build
 # it. Afterwards, the user or another script can install SimpleElastix
 # for python in another local environment doing e.g.
 #
 #     ./build_SimpleElastix.sh 3.6
-#     cd ~/Downloads/SimpleElastix/build_3.6/SimpleITK-build/Wrapping/Python/Packaging
+#     cd ~/Software/SimpleElastix/build_3.6/SimpleITK-build/Wrapping/Python/Packaging
 #     python setup.py install
 
 
@@ -126,7 +126,7 @@ create_conda_local_environment SimpleElastix ${PYTHON_VERSION}
 
 # prepare to install SimpleElastix
 tput setaf 1; echo "** Clone or update SimpleElastix code"; tput sgr0
-cd ~/Downloads
+cd ~/Software
 if [ -d SimpleElastix ]
 then
    cd SimpleElastix
@@ -143,7 +143,7 @@ mkdir -p build_${PYTHON_VERSION}
 
 # build for python 3.6
 source activate SimpleElastix_${PYTHON_VERSION} || exit 1
-cd ~/Downloads/SimpleElastix/build_${PYTHON_VERSION}
+cd ~/Software/SimpleElastix/build_${PYTHON_VERSION}
 
 SITK_OPTS="\
 -DWRAP_PYTHON:BOOL=ON \
