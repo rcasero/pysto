@@ -90,15 +90,15 @@ then
     SIMPLEITK_PROJ=$1
     if [[ $SIMPLEITK_PROJ != "SimpleITK" ]] && [[ $SIMPLEITK_PROJ != "SimpleElastix" ]]
     then
-	tput setaf 1
+	/usr/bin/tput setaf 1
 	echo "Error: Syntax: ./install_dependencies.sh [SimpleITK | SimpleElastix]"
-	tput sgr0
+	/usr/bin/tput sgr0
 	exit 1
     fi
 else
-    tput setaf 1
+    /usr/bin/tput setaf 1
     echo "Error: Syntax: ./install_dependencies.sh [SimpleITK | SimpleElastix]"
-    tput sgr0
+    /usr/bin/tput sgr0
     exit 1
 fi
 
@@ -114,10 +114,10 @@ create_conda_local_environment() {
     PYTHON_VERSION=$2
 
     if [ -z "$(conda info --envs | sed '/^#/ d' | cut -f1 -d ' ' | grep -w ${NAME}_${PYTHON_VERSION})" ]; then
-	tput setaf 1; echo "** Create conda local environment: ${NAME}_${PYTHON_VERSION}"; tput sgr0
+	/usr/bin/tput setaf 1; echo "** Create conda local environment: ${NAME}_${PYTHON_VERSION}"; /usr/bin/tput sgr0
 	conda create -y --name ${NAME}_${PYTHON_VERSION} python=${PYTHON_VERSION}
     else
-	tput setaf 1; echo "** Conda local environment already exists (...skipping): ${NAME}_${PYTHON_VERSION}"; tput sgr0
+	/usr/bin/tput setaf 1; echo "** Conda local environment already exists (...skipping): ${NAME}_${PYTHON_VERSION}"; /usr/bin/tput sgr0
     fi
 }
 
@@ -131,13 +131,13 @@ sudo apt-get install -y jq curl automake python3-docutils pandoc
 # install conda package manager
 
 # Miniconda 2
-if [ -e /opt/miniconda2 ]
+if [ -d "/opt/miniconda2" ];
 then
-    tput setaf 1; echo "** Conda 2 package manager already installed"; tput sgr0
+    /usr/bin/tput setaf 1; echo "** Conda 2 package manager already installed"; /usr/bin/tput sgr0
 else
-    tput setaf 1; echo "** Installing conda 2 package manager"; tput sgr0
+    /usr/bin/tput setaf 1; echo "** Installing conda 2 package manager"; /usr/bin/tput sgr0
     # download installer
-    if [ ! -e Miniconda2-latest-Linux-x86_64.sh ]
+    if [ ! -e "Miniconda2-latest-Linux-x86_64.sh" ];
     then
 	wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
     fi
@@ -145,7 +145,7 @@ else
     chmod u+x Miniconda2-latest-Linux-x86_64.sh
     sudo ./Miniconda2-latest-Linux-x86_64.sh -b -p /opt/miniconda2
     isInPath=`grep  -c 'export PATH=/opt/miniconda2/bin:"$PATH"' ~/.bashrc`
-    if [ $isInPath -eq 0 ]
+    if [ "$isInPath" -eq 0 ];
     then
 	echo "
 # added by histo2ct/install_dependencies.sh
@@ -155,11 +155,11 @@ export PATH=/opt/miniconda2/bin:\"\$PATH\"" >> ~/.bashrc
 fi
 
 # Miniconda 3
-if [ -e /opt/miniconda3 ]
+if [ -d /opt/miniconda3 ]
 then
-    tput setaf 1; echo "** Conda 3 package manager already installed"; tput sgr0
+    /usr/bin/tput setaf 1; echo "** Conda 3 package manager already installed"; /usr/bin/tput sgr0
 else
-    tput setaf 1; echo "** Installing conda 3 package manager"; tput sgr0
+    /usr/bin/tput setaf 1; echo "** Installing conda 3 package manager"; /usr/bin/tput sgr0
     # download installer
     if [ ! -e Miniconda3-latest-Linux-x86_64.sh ]
     then
@@ -183,15 +183,15 @@ fi
 create_conda_local_environment pysto 2.7 || exit 1
 
 # switch to pysto local environment
-tput setaf 1; echo "** Switching to local environment: pysto_2.7"; tput sgr0
+/usr/bin/tput setaf 1; echo "** Switching to local environment: pysto_2.7"; /usr/bin/tput sgr0
 source activate pysto_2.7 || exit 1
 
 # install pysto code and dependencies
-tput setaf 1; echo "** Install pysto code and dependencies in local environment"; tput sgr0
+/usr/bin/tput setaf 1; echo "** Install pysto code and dependencies in local environment"; /usr/bin/tput sgr0
 pip install --upgrade . || exit 1
 
 # install development tools
-tput setaf 1; echo "** Install development tools in local environment"; tput sgr0
+/usr/bin/tput setaf 1; echo "** Install development tools in local environment"; /usr/bin/tput sgr0
 conda install -y spyder pytest pillow
 pip install --upgrade twine wheel setuptools
 
@@ -201,15 +201,15 @@ pip install --upgrade twine wheel setuptools
 create_conda_local_environment pysto 3.6 || exit 1
 
 # switch to pysto local environment
-tput setaf 1; echo "** Switching to local environment: pysto_3.6"; tput sgr0
+/usr/bin/tput setaf 1; echo "** Switching to local environment: pysto_3.6"; /usr/bin/tput sgr0
 source activate pysto_3.6 || exit 1
 
 # install pysto code and dependencies
-tput setaf 1; echo "** Install pysto code and dependencies in local environment"; tput sgr0
+/usr/bin/tput setaf 1; echo "** Install pysto code and dependencies in local environment"; /usr/bin/tput sgr0
 pip install --upgrade . || exit 1
 
 # install development tools
-tput setaf 1; echo "** Install development tools in local environment"; tput sgr0
+/usr/bin/tput setaf 1; echo "** Install development tools in local environment"; /usr/bin/tput sgr0
 conda install -y spyder pytest pillow
 pip install --upgrade twine wheel setuptools
 
