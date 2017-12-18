@@ -136,14 +136,37 @@ then
 else
     tput setaf 1; echo "** Installing conda 3 package manager"; tput sgr0
     # download installer
+    if [ ! -e Miniconda2-latest-Linux-x86_64.sh ]
+    then
+	wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
+    fi
+    # install conda for python 2.7
+    chmod u+x Miniconda2-latest-Linux-x86_64.sh
+    sudo ./Miniconda2-latest-Linux-x86_64.sh -b -p /opt/miniconda2
+    isInPath=`grep  -c 'export PATH=/opt/miniconda2/bin:"$PATH"' ~/.bashrc`
+    if [ $isInPath -eq 0 ]
+    then
+	echo "
+# added by histo2ct/install_dependencies.sh
+export PATH=/opt/miniconda2/bin:\"\$PATH\"" >> ~/.bashrc
+	source ~/.bashrc
+    fi
+    # download installer
     if [ ! -e Miniconda3-latest-Linux-x86_64.sh ]
     then
 	wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
     fi
-    # install conda
+    # install conda for python 3.6
     chmod u+x Miniconda3-latest-Linux-x86_64.sh
     sudo ./Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3
-    source ~/.bashrc
+    isInPath=`grep  -c 'export PATH=/opt/miniconda3/bin:"$PATH"' ~/.bashrc`
+    if [ $isInPath -eq 0 ]
+    then
+	echo "
+# added by histo2ct/install_dependencies.sh
+export PATH=/opt/miniconda3/bin:\"\$PATH\"" >> ~/.bashrc
+	source ~/.bashrc
+    fi
 fi
 
 #################################################################################################
