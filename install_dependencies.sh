@@ -130,11 +130,12 @@ sudo apt-get install -y jq curl automake python3-docutils pandoc
 #################################################################################################
 # install conda package manager
 
-if hash conda 2>/dev/null
+# Miniconda 2
+if [ -e /opt/miniconda2 ]
 then
-    tput setaf 1; echo "** Conda 3 package manager already installed"; tput sgr0
+    tput setaf 1; echo "** Conda 2 package manager already installed"; tput sgr0
 else
-    tput setaf 1; echo "** Installing conda 3 package manager"; tput sgr0
+    tput setaf 1; echo "** Installing conda 2 package manager"; tput sgr0
     # download installer
     if [ ! -e Miniconda2-latest-Linux-x86_64.sh ]
     then
@@ -151,6 +152,14 @@ else
 export PATH=/opt/miniconda2/bin:\"\$PATH\"" >> ~/.bashrc
 	source ~/.bashrc
     fi
+fi
+
+# Miniconda 3
+if [ -e /opt/miniconda3 ]
+then
+    tput setaf 1; echo "** Conda 3 package manager already installed"; tput sgr0
+else
+    tput setaf 1; echo "** Installing conda 3 package manager"; tput sgr0
     # download installer
     if [ ! -e Miniconda3-latest-Linux-x86_64.sh ]
     then
