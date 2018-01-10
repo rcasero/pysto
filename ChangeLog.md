@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## vx.x.x
 
 ## Changed
-
+- Move bash scripts to new tools directory.
 - imgproc.imfuse(): Add warning if both images don't have the same
   pixel type, because in that case, they produce visualisation
   artifacts.
