@@ -6,7 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## vx.x.x
 
-## Changed
+### Added
+- install_miniconda.sh: Bash script to install Miniconda 2 or 3.
+
+### Changed
 - install_pysto_environment.sh: No longer installing Miniconda 2.
 - Rename install_dependencies.sh -> install_pysto_environment.sh.
 - Move bash scripts to new tools directory.
@@ -17,7 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## v1.4.1
 
-## Changed
+### Changed
 - imgprocITK.imshow(): Fix bug. When origin='lower', the image will be
   upside down, so we need to take that into account for the vertical
   axis

@@ -60,7 +60,7 @@
 #           SimpleElastix_* environments. This way, we know that they
 #           will be the same that other conda local environments use.
 
-#    Copyright © 2017  Ramón Casero <rcasero@gmail.com>
+#    Copyright © 2017-2018  Ramón Casero <rcasero@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -130,57 +130,7 @@ sudo apt-get install -y jq curl automake python3-docutils pandoc
 #################################################################################################
 # install conda package manager
 
-# # Miniconda 2
-# if [ -d "/opt/miniconda2" ];
-# then
-#     /usr/bin/tput setaf 1; echo "** Conda 2 package manager already installed"; /usr/bin/tput sgr0
-# else
-#     /usr/bin/tput setaf 1; echo "** Installing conda 2 package manager"; /usr/bin/tput sgr0
-#     pushd ~/Download
-#     # download installer
-#     if [ ! -e "Miniconda2-latest-Linux-x86_64.sh" ];
-#     then
-# 	wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
-#     fi
-#     # install conda for python 2.7
-#     chmod u+x Miniconda2-latest-Linux-x86_64.sh
-#     sudo ./Miniconda2-latest-Linux-x86_64.sh -b -p /opt/miniconda2
-#     isInPath=`grep  -c 'export PATH=/opt/miniconda2/bin:"$PATH"' ~/.bashrc`
-#     if [ "$isInPath" -eq 0 ];
-#     then
-# 	echo "
-# # added by histo2ct/install_pysto_environment.sh
-# export PATH=/opt/miniconda2/bin:\"\$PATH\"" >> ~/.bashrc
-# 	source ~/.bashrc
-#     fi
-#     popd
-# fi
-
-# Miniconda 3
-if [ -d /opt/miniconda3 ]
-then
-    /usr/bin/tput setaf 1; echo "** Conda 3 package manager already installed"; /usr/bin/tput sgr0
-else
-    /usr/bin/tput setaf 1; echo "** Installing conda 3 package manager"; /usr/bin/tput sgr0
-    pushd ~/Download
-    # download installer
-    if [ ! -e Miniconda3-latest-Linux-x86_64.sh ]
-    then
-	wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    fi
-    # install conda for python 3.6
-    chmod u+x Miniconda3-latest-Linux-x86_64.sh
-    sudo ./Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3
-    isInPath=`grep  -c 'export PATH=/opt/miniconda3/bin:"$PATH"' ~/.bashrc`
-    if [ $isInPath -eq 0 ]
-    then
-	echo "
-# added by histo2ct/install_pysto_environment.sh
-export PATH=/opt/miniconda3/bin:\"\$PATH\"" >> ~/.bashrc
-	source ~/.bashrc
-    fi
-    popd
-fi
+./install_miniconda.sh 3
 
 #################################################################################################
 # pysto local environment: for python 2.7
