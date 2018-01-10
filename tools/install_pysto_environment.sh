@@ -130,31 +130,31 @@ sudo apt-get install -y jq curl automake python3-docutils pandoc
 #################################################################################################
 # install conda package manager
 
-# Miniconda 2
-if [ -d "/opt/miniconda2" ];
-then
-    /usr/bin/tput setaf 1; echo "** Conda 2 package manager already installed"; /usr/bin/tput sgr0
-else
-    /usr/bin/tput setaf 1; echo "** Installing conda 2 package manager"; /usr/bin/tput sgr0
-    pushd ~/Download
-    # download installer
-    if [ ! -e "Miniconda2-latest-Linux-x86_64.sh" ];
-    then
-	wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
-    fi
-    # install conda for python 2.7
-    chmod u+x Miniconda2-latest-Linux-x86_64.sh
-    sudo ./Miniconda2-latest-Linux-x86_64.sh -b -p /opt/miniconda2
-    isInPath=`grep  -c 'export PATH=/opt/miniconda2/bin:"$PATH"' ~/.bashrc`
-    if [ "$isInPath" -eq 0 ];
-    then
-	echo "
-# added by histo2ct/install_pysto_environment.sh
-export PATH=/opt/miniconda2/bin:\"\$PATH\"" >> ~/.bashrc
-	source ~/.bashrc
-    fi
-    popd
-fi
+# # Miniconda 2
+# if [ -d "/opt/miniconda2" ];
+# then
+#     /usr/bin/tput setaf 1; echo "** Conda 2 package manager already installed"; /usr/bin/tput sgr0
+# else
+#     /usr/bin/tput setaf 1; echo "** Installing conda 2 package manager"; /usr/bin/tput sgr0
+#     pushd ~/Download
+#     # download installer
+#     if [ ! -e "Miniconda2-latest-Linux-x86_64.sh" ];
+#     then
+# 	wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
+#     fi
+#     # install conda for python 2.7
+#     chmod u+x Miniconda2-latest-Linux-x86_64.sh
+#     sudo ./Miniconda2-latest-Linux-x86_64.sh -b -p /opt/miniconda2
+#     isInPath=`grep  -c 'export PATH=/opt/miniconda2/bin:"$PATH"' ~/.bashrc`
+#     if [ "$isInPath" -eq 0 ];
+#     then
+# 	echo "
+# # added by histo2ct/install_pysto_environment.sh
+# export PATH=/opt/miniconda2/bin:\"\$PATH\"" >> ~/.bashrc
+# 	source ~/.bashrc
+#     fi
+#     popd
+# fi
 
 # Miniconda 3
 if [ -d /opt/miniconda3 ]

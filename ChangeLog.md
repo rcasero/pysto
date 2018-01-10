@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## vx.x.x
 
 ## Changed
+- install_pysto_environment.sh: No longer installing Miniconda 2.
 - Rename install_dependencies.sh -> install_pysto_environment.sh.
 - Move bash scripts to new tools directory.
 - imgproc.imfuse(): Add warning if both images don't have the same
