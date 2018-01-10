@@ -25,7 +25,7 @@ tomatoes, onions, courgettes, green and red peppers and olive oil.
 
 # Developer instructions
 
-We provide scripts `install_dependencies.sh` and `build_SimpleElastix.sh` to help install necessary software, and a `Makefile` to simplify testing and releasing.
+We provide scripts `install_pysto_environment.sh` and `build_SimpleElastix.sh` to help install necessary software, and a `Makefile` to simplify testing and releasing.
 
 ## Installing pysto as a developer
 
@@ -37,12 +37,12 @@ We provide scripts `install_dependencies.sh` and `build_SimpleElastix.sh` to hel
    1. If you are happy with the official SimpleITK package, just run (this is very fast)
 
            cd pysto
-           ./install_dependencies.sh
+           ./install_pysto_environment.sh
 
    1. If you prefer [SimpleElastix](https://simpleelastix.github.io/) (an extension of [SimpleITK](http://www.simpleitk.org/) with [elastix registration software](http://elastix.isi.uu.nl/))
 
            cd pysto
-           ./install_dependencies.sh SimpleElastix
+           ./install_pysto_environment.sh SimpleElastix
 
 1. Install the pysto code to one or both of the local environments
 

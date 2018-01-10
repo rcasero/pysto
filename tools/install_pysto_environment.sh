@@ -1,4 +1,4 @@
-# file: install_dependencies.sh
+# file: install_pysto_environment.sh
 #
 #    Summary:
 #    ====================================================================
@@ -15,15 +15,15 @@
 #    Syntax:
 #    ====================================================================
 #
-#    ./install_dependencies.sh
-#    ./install_dependencies.sh SimpleITK
+#    ./install_pysto_environment.sh
+#    ./install_pysto_environment.sh SimpleITK
 #
 #         This installs developer programs, as well as package
 #         dependencies. One of the dependencies is SimpleITK. With
 #         either syntax above, we install the official SimpleITK
 #         package.
 #
-#    ./install_dependencies.sh SimpleElastix
+#    ./install_pysto_environment.sh SimpleElastix
 #
 #         However, we may prefer installing SimpleElastix, an
 #         extension of SimpleITK. In this latter case, there's no
@@ -91,13 +91,13 @@ then
     if [[ $SIMPLEITK_PROJ != "SimpleITK" ]] && [[ $SIMPLEITK_PROJ != "SimpleElastix" ]]
     then
 	/usr/bin/tput setaf 1
-	echo "Error: Syntax: ./install_dependencies.sh [SimpleITK | SimpleElastix]"
+	echo "Error: Syntax: ./install_pysto_environment.sh [SimpleITK | SimpleElastix]"
 	/usr/bin/tput sgr0
 	exit 1
     fi
 else
     /usr/bin/tput setaf 1
-    echo "Error: Syntax: ./install_dependencies.sh [SimpleITK | SimpleElastix]"
+    echo "Error: Syntax: ./install_pysto_environment.sh [SimpleITK | SimpleElastix]"
     /usr/bin/tput sgr0
     exit 1
 fi
@@ -136,6 +136,7 @@ then
     /usr/bin/tput setaf 1; echo "** Conda 2 package manager already installed"; /usr/bin/tput sgr0
 else
     /usr/bin/tput setaf 1; echo "** Installing conda 2 package manager"; /usr/bin/tput sgr0
+    pushd ~/Download
     # download installer
     if [ ! -e "Miniconda2-latest-Linux-x86_64.sh" ];
     then
@@ -148,10 +149,11 @@ else
     if [ "$isInPath" -eq 0 ];
     then
 	echo "
-# added by histo2ct/install_dependencies.sh
+# added by histo2ct/install_pysto_environment.sh
 export PATH=/opt/miniconda2/bin:\"\$PATH\"" >> ~/.bashrc
 	source ~/.bashrc
     fi
+    popd
 fi
 
 # Miniconda 3
@@ -160,6 +162,7 @@ then
     /usr/bin/tput setaf 1; echo "** Conda 3 package manager already installed"; /usr/bin/tput sgr0
 else
     /usr/bin/tput setaf 1; echo "** Installing conda 3 package manager"; /usr/bin/tput sgr0
+    pushd ~/Download
     # download installer
     if [ ! -e Miniconda3-latest-Linux-x86_64.sh ]
     then
@@ -172,10 +175,11 @@ else
     if [ $isInPath -eq 0 ]
     then
 	echo "
-# added by histo2ct/install_dependencies.sh
+# added by histo2ct/install_pysto_environment.sh
 export PATH=/opt/miniconda3/bin:\"\$PATH\"" >> ~/.bashrc
 	source ~/.bashrc
     fi
+    popd
 fi
 
 #################################################################################################
