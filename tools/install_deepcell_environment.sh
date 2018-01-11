@@ -58,9 +58,6 @@ sudo apt install gcc-5 g++-5
 # python IDE
 sudo snap install pycharm-community --classic
 
-# BLAS library, development version, so that Theano code can be compiled with it
-sudo apt install -y libblas-dev
-
 # install Miniconda 3
 ./install_miniconda.sh 3
 
@@ -83,9 +80,10 @@ conda install -y pip=8.1.2
 # install Keras 1
 conda install -y keras=1.1.1 theano=0.9.0
 conda install -y cudnn=5.1 pygpu=0.6.9
+conda install -y mkl-service
 
 # install other python packages
-conda install -y matplotlib pillow spyder
+conda install -y matplotlib pillow
 conda install -y scikit-image scikit-learn h5py
 conda install -y -c conda-forge tifffile mahotas
 conda install -y nose pytest
