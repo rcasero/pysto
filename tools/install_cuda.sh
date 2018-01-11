@@ -18,16 +18,9 @@
 #
 #      nvidia_ubuntu_17.04: From the Nvidia website, .deb packages for Ubuntu 17.04 (x86_64)
 #
-#    Note: If you have a previously installed CUDA Toolkit from the
-#      Nvidia website, and try to install the other, you'll get the
-#      error
-#
-#      Unpacking cuda-repo-ubuntu1604-9-1-local (9.1.85-1) ...
-#      dpkg: error processing archive cuda-repo-ubuntu1604-9-1-local_9.1.85-1_amd64.deb (--install):
-#      trying to overwrite '/etc/apt/sources.list.d/cuda-9-1-local.list', which is also in package cuda-repo-ubuntu1704-9-1-local 9.1.85-1
-#      dpkg-deb: error: subprocess paste was killed by signal (Broken pipe)
-#
-#      First, you need to manually uninstall the previous version:
+#    Note: If you choose an Nvidia website installation, and the cuda
+#      package is already installed, installation is skipped. To
+#      manually uninstall the previous version:
 #
 #      sudo apt remove -y --purge conda
 #      sudo apt autoremove -y --purge
@@ -92,16 +85,53 @@ sudo apt autoremove -y
 set -e
 
 echo
-echo "** Install Nvidia website packages"
-pushd ~/Downloads
-if [ ! -e "${CUDA_VERSION}.deb" ];
-then
-    wget https://developer.nvidia.com/compute/cuda/9.1/Prod/local_installers/${CUDA_VERSION}
-fi
-sudo dpkg -i ${CUDA_VERSION}.deb
-sudo apt-key add /var/cuda-repo-9-1-local/7fa2af80.pub
-sudo apt-get update
-sudo apt-get install -y cuda
-popd
 
-exit 0
+echo "** Install Nvidia website packages"
+
+# check whether package cuda is already installed
+#
+# The following line of code produces 0 if the package is not listed
+# yet in APT or is not installed, and 1 if it's installed. E.g.,
+# assuming that the cuda package is installed
+#
+#   $ dpkg-query -l cuda 2>/dev/null
+#   Desired=Unknown/Install/Remove/Purge/Hold
+#   | Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
+#   |/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
+#   ||/ Name                    Version          Architecture     Description
+#   +++-=======================-================-================-====================================================
+#   ii  cuda                    9.1.85-1         amd64            CUDA meta-package
+#
+#   $ dpkg-query -l cuda 2>/dev/null| tail -n 1
+#   ii  cuda           9.1.85-1     amd64        CUDA meta-package
+#
+#   $ dpkg-query -l cuda 2>/dev/null| tail -n 1 | sed 's/  */ /g'
+#   ii cuda 9.1.85-1 amd64 CUDA meta-package
+#
+#   $ dpkg-query -l cuda 2>/dev/null| tail -n 1 | sed 's/  */ /g' | cut -f 3 -d ' '
+#   9.1.85-1
+#
+#   $ dpkg-query -l cuda 2>/dev/null| tail -n 1 | sed 's/  */ /g' | cut -f 3 -d ' ' | sed 's/[a-Z<>]//g'
+#   9.1.85-1
+#
+#   $ dpkg-query -l cuda 2>/dev/null | tail -n 1 | sed 's/  */ /g' | cut -f 3 -d ' ' | sed 's/[a-Z<>]//g' | wc -w
+#   1
+
+CHECK=`dpkg-query -l cuda 2>/dev/null | tail -n 1 | sed 's/  */ /g' | cut -f 3 -d ' ' | sed 's/[a-Z<>]//g' | wc -w`
+
+if [ $CHECK -eq 0 ]
+then
+    echo "** Installing cuda package"
+    pushd ~/Downloads
+    if [ ! -e "${CUDA_VERSION}.deb" ];
+    then
+	wget https://developer.nvidia.com/compute/cuda/9.1/Prod/local_installers/${CUDA_VERSION}
+    fi
+    sudo dpkg -i ${CUDA_VERSION}.deb
+    sudo apt-key add /var/cuda-repo-9-1-local/7fa2af80.pub
+    sudo apt-get update
+    sudo apt-get install -y cuda
+    popd
+else
+    echo "** cuda package already installed, skipping"
+fi
