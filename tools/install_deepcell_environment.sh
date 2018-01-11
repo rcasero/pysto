@@ -37,32 +37,10 @@
 # exit immediately on errors that are not inside an if test, etc.
 set -e
 
-# 
-
 ######################################################################
 
-tput setaf 1; echo "** NVIDIA drivers"; tput sgr0
-
-## CUDA Toolkit installation. There are several options (uncomment the preferred one):
-
-# Option 1. CUDA Toolkit from the Ubuntu distribution packages
-# sudo apt install -y nvidia-cuda-dev nvidia-cuda-toolkit
-
-# Option 2. From Nvidia website:
-## CUDA Toolkit 9.1 for Ubuntu 16.04
-#CUDA_VERSION=cuda-repo-ubuntu1604-9-1-local_9.1.85-1_amd64
-## CUDA Toolkit 9.1 for Ubuntu 17.04
-CUDA_VERSION=cuda-repo-ubuntu1704-9-1-local_9.1.85-1_amd64
-pushd ~/Downloads
-if [ ! -e "${CUDA_VERSION}.deb" ];
-then
-    wget https://developer.nvidia.com/compute/cuda/9.1/Prod/local_installers/${CUDA_VERSION}
-fi
-sudo dpkg -i ${CUDA_VERSION}.deb
-sudo apt-key add /var/cuda-repo-9-1-local/7fa2af80.pub
-sudo apt-get update
-sudo apt-get install cuda
-popd
+# install CUDA toolkit for Ubuntu 17.04 directly from the Nvidia website
+./install_cuda.sh nvidia_ubuntu_17.04
 
 ######################################################################
 
