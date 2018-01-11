@@ -39,6 +39,9 @@ set -e
 
 ######################################################################
 
+# install Miniconda 3
+./install_miniconda.sh 3
+
 # install CUDA toolkit for Ubuntu 17.04 directly from the Nvidia website
 ./install_cuda.sh nvidia_ubuntu_17.04
 
