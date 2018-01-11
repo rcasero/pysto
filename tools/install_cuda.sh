@@ -22,7 +22,7 @@
 #      package is already installed, installation is skipped. To
 #      manually uninstall the previous version:
 #
-#      sudo apt remove -y --purge conda
+#      sudo apt remove -y --purge cuda
 #      sudo apt autoremove -y --purge
 
 
