@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## vx.x.x
 
 ### Added
+- install_cuda.sh: Bash script to install the CUDA toolkit.
+- install_deepcell_environment.sh: Bash script to install the
+  Ubuntu packages, python modules and create conda environment for
+  DeepCell environment.
 - install_miniconda.sh: Bash script to install Miniconda 2 or 3.
 
 ### Changed
