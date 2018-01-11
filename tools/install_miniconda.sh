@@ -39,6 +39,9 @@ if [ "$#" -eq 0 ]
 then
     # default input value
     VERSION=3
+else
+    # input value provided by user
+    VERSION="$1"
 fi
 
 if [ -d "/opt/miniconda${VERSION}" ];
