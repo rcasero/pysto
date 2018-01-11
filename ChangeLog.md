@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## vx.x.x
 
 ### Added
+- install_keras_environment.sh: Bash script to install the Ubuntu
+  packages,python modules and create conda environment for
+  environments that use Keras.
 - install_cuda.sh: Bash script to install the CUDA toolkit.
 - install_deepcell_environment.sh: Bash script to install the
   Ubuntu packages, python modules and create conda environment for
