@@ -29,7 +29,8 @@
 #         extension of SimpleITK. In this latter case, there's no
 #         pip/conda package, so we have to download and build the
 #         SimpleElastix project. This process is delegated to script
-#         build_SimpleElastix.sh.
+#         build_SimpleElastix.sh from project
+#         https://github.com/rcasero/python_setup.
 #
 #
 #    Developer notes:
@@ -170,6 +171,16 @@ pip install --upgrade twine wheel setuptools
 #################################################################################################
 # install SimpleITK or build and install SimpleElastix (which is SimpleITK extended with more functions)
 
+# install python_setup project if not present
+source deactivate
+if [ ! -d "~/Software/python_setup" ]
+then
+    cd ~/Software
+    git clone https://${USER}@github.com/rcasero/python_setup.git
+fi
+cd python_setup
+git pull
+
 # pysto requires
 
 if [ "$SIMPLEITK_PROJ" == SimpleElastix ]
@@ -185,8 +196,8 @@ then
     # But currently, it seems that running cmake for 1 and then for 2 or 3
     # triggers a full rebuild
     
-    ./build_SimpleElastix.sh 2.7 || exit 1
-    ./build_SimpleElastix.sh 3.6 || exit 1
+    ~/Software/python_setup/bin/build_SimpleElastix.sh 2.7 || exit 1
+    ~/Software/python_setup/bin/build_SimpleElastix.sh 3.6 || exit 1
 
     # install SimpleElastix python wrappers
     source activate pysto_2.7 || exit 1
