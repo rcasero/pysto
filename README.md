@@ -36,12 +36,12 @@ We provide scripts `install_pysto_environment.sh` and `build_SimpleElastix.sh` t
 1. Install the development dependencies (this creates local conda environments `pysto_2.7` and `pysto_3.6`, for python 2.7 and 3.6, respectively and installs several Ubuntu and python packages). There are two options, depending on what SimpleITK you want:
    1. If you are happy with the official SimpleITK package, just run (this is very fast)
 
-           cd pysto
+           cd pysto/tools
            ./install_pysto_environment.sh
 
    1. If you prefer [SimpleElastix](https://simpleelastix.github.io/) (an extension of [SimpleITK](http://www.simpleitk.org/) with [elastix registration software](http://elastix.isi.uu.nl/))
 
-           cd pysto
+           cd pysto/tools
            ./install_pysto_environment.sh SimpleElastix
 
 1. Install the pysto code to one or both of the local environments
@@ -90,7 +90,7 @@ by the password). This will be used by `twine` to release packages to PyPI
 
 1. Launch the development IDE, e.g.
 
-        spyder&
+        pycharm-community &
 
 1. In your code, import the pysto modules/functions in the usual way, e.g.
 
