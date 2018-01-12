@@ -6,17 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## vx.x.x
 
-### Added
-- install_keras_environment.sh: Bash script to install the Ubuntu
-  packages,python modules and create conda environment for
-  environments that use Keras.
-- install_cuda.sh: Bash script to install the CUDA toolkit.
-- install_deepcell_environment.sh: Bash script to install the
-  Ubuntu packages, python modules and create conda environment for
-  DeepCell environment.
-- install_miniconda.sh: Bash script to install Miniconda 2 or 3.
+### Removed
+
+- build_SimpleElastix.sh: Move to python_setup project.
 
 ### Changed
+
 - install_pysto_environment.sh: No longer installing Miniconda 2.
 - Rename install_dependencies.sh -> install_pysto_environment.sh.
 - Move bash scripts to new tools directory.
@@ -28,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## v1.4.1
 
 ### Changed
+
 - imgprocITK.imshow(): Fix bug. When origin='lower', the image will be
   upside down, so we need to take that into account for the vertical
   axis
@@ -35,12 +31,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## v1.4.0
 
 ### Added
+
 - imgprocITK.TypicalBorderIntensity(): Compute the typical values at
   the boundaries of SimpleITK Images or np.arrays
 
 ## v1.3.4
 
 ### Changed
+
 - Makefile: fix bugs, missing test targets
 - Makefile: error with README.rst rule when README.md hasn't been edited
 - imgprocITK.imshow(): fix bug, wrong indirection level passing kwargs to plt.imshow().
@@ -49,12 +47,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## v1.3.3
 
 ### Changed
+
 - Allow developer to install the SimpleITK dependency either as
   official SimpleITK package or build and install SimpleElastix.
 
 ## v1.3.2
 
 ### Changed
+
 - README.md: increase code block tab by 1 so that it translates
   correctly into PyPI HTML.
 
@@ -65,16 +65,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## v1.3.0
 
 ### Added
+
 - imgprocITK.imshow(): matplotlib.imshow extended for the ITK Image class.
 - module imgprocITK for functions that depend on SimpleITK.
 
 ### Changed
+
 - Clarify help header of block_split().
 - In setup.py, link long_description to README.md.
 
 ## v1.2.0
 
 ### Added
+
 - improc.block_stack(): Stack a list of blocks to reassemble the
   original array. This function is the opposite of block_split().
 - Makefile: Simplify common development tasks (test, package).
@@ -82,6 +85,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## v1.1.3
 
 ### Changed
+
 - __init__: Fix bug, missing encoding for file.
 - tests/*.py: Fix bug, typo in directory for data.
 - pysto/improc.py: Fix bug. np.divide in Python 2 is integer division
@@ -90,21 +94,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## v1.1.2
 
 ### Changed
+
 - setup.py: Improve metainformation.
 
 ## v1.1.1
 
 ### Changed
+
 - ChangeLog.md: Update ChangeLog.
 
 ## v1.1.0
 
 ### Added
+
 - imgproc.block_split(): "Split an nd-array into blocks".
 
 ## v1.0.0
 
 ### Added
+
 - imgproc.matchHist(): "Modify image intensities to match the
   histogram of a reference image" by
   [rcasero](https://github.com/rcasero)
