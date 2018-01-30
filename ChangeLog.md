@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
-- build_SimpleElastix.sh: Move to python_setup project.
+- build_SimpleElastix.sh, install_miniconda.sh: Move to python_setup
+  project.
 
 ### Changed
 

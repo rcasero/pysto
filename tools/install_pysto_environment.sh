@@ -131,7 +131,7 @@ sudo apt-get install -y jq curl automake python3-docutils pandoc
 #################################################################################################
 # install conda package manager
 
-./install_miniconda.sh 3
+../../python_setup/bin/install_miniconda.sh 3
 
 #################################################################################################
 # pysto local environment: for python 2.7
