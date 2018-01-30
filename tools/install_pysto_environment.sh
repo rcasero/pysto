@@ -78,6 +78,9 @@
 
 #!/bin/bash
 
+# exit immediately on errors that are not inside an if test, etc.
+set -e
+
 #################################################################################################
 # syntax
 
@@ -142,11 +145,11 @@ create_conda_local_environment pysto 2.7 || exit 1
 source activate pysto_2.7 || exit 1
 
 # install pysto code and dependencies
-/usr/bin/tput setaf 1; echo "** Install pysto code and dependencies in local environment"; /usr/bin/tput sgr0
+/usr/bin/tput setaf 1; echo "** Install pysto code and dependencies in local environment: pysto_2.7"; /usr/bin/tput sgr0
 pip install --upgrade .. || exit 1
 
 # install development tools
-/usr/bin/tput setaf 1; echo "** Install development tools in local environment"; /usr/bin/tput sgr0
+/usr/bin/tput setaf 1; echo "** Install development tools in local environment: pysto_2.7"; /usr/bin/tput sgr0
 conda install -y spyder pytest pillow
 pip install --upgrade twine wheel setuptools
 
@@ -160,11 +163,11 @@ create_conda_local_environment pysto 3.6 || exit 1
 source activate pysto_3.6 || exit 1
 
 # install pysto code and dependencies
-/usr/bin/tput setaf 1; echo "** Install pysto code and dependencies in local environment"; /usr/bin/tput sgr0
+/usr/bin/tput setaf 1; echo "** Install pysto code and dependencies in local environment: pysto_3.6"; /usr/bin/tput sgr0
 pip install --upgrade .. || exit 1
 
 # install development tools
-/usr/bin/tput setaf 1; echo "** Install development tools in local environment"; /usr/bin/tput sgr0
+/usr/bin/tput setaf 1; echo "** Install development tools in local environment: pysto_3.6"; /usr/bin/tput sgr0
 conda install -y spyder pytest pillow
 pip install --upgrade twine wheel setuptools
 
@@ -173,12 +176,12 @@ pip install --upgrade twine wheel setuptools
 
 # install python_setup project if not present
 source deactivate
-if [ ! -d "~/Software/python_setup" ]
+if [ ! -d "$HOME/Software/python_setup" ]
 then
-    cd ~/Software
+    cd $HOME/Software
     git clone https://${USER}@github.com/rcasero/python_setup.git
 fi
-cd python_setup
+cd $HOME/Software/python_setup
 git pull
 
 # pysto requires
@@ -196,17 +199,17 @@ then
     # But currently, it seems that running cmake for 1 and then for 2 or 3
     # triggers a full rebuild
     
-    ../../python_setup/bin/build_SimpleElastix.sh 2.7 || exit 1
-    ../../python_setup/bin/build_SimpleElastix.sh 3.6 || exit 1
+    bin/build_SimpleElastix.sh 2.7 || exit 1
+    bin/build_SimpleElastix.sh 3.6 || exit 1
 
     # install SimpleElastix python wrappers
     source activate pysto_2.7 || exit 1
-    cd ../../python_setup/bin/SimpleElastix/build_2.7/SimpleITK-build/Wrapping/Python/Packaging || exit 1
+    cd $HOME/python_setup/bin/SimpleElastix/build_2.7/SimpleITK-build/Wrapping/Python/Packaging || exit 1
     python setup.py --upgrade install || exit 1
     
     # install SimpleElastix python wrappers
     source activate pysto_3.6 || exit 1
-    cd ../../python_setup/bin/SimpleElastix/build_3.6/SimpleITK-build/Wrapping/Python/Packaging || exit 1
+    cd $HOME/python_setup/bin/SimpleElastix/build_3.6/SimpleITK-build/Wrapping/Python/Packaging || exit 1
     python setup.py --upgrade install || exit 1
 
 else
