@@ -143,7 +143,7 @@ source activate pysto_2.7 || exit 1
 
 # install pysto code and dependencies
 /usr/bin/tput setaf 1; echo "** Install pysto code and dependencies in local environment"; /usr/bin/tput sgr0
-pip install --upgrade . || exit 1
+pip install --upgrade .. || exit 1
 
 # install development tools
 /usr/bin/tput setaf 1; echo "** Install development tools in local environment"; /usr/bin/tput sgr0
@@ -161,7 +161,7 @@ source activate pysto_3.6 || exit 1
 
 # install pysto code and dependencies
 /usr/bin/tput setaf 1; echo "** Install pysto code and dependencies in local environment"; /usr/bin/tput sgr0
-pip install --upgrade . || exit 1
+pip install --upgrade .. || exit 1
 
 # install development tools
 /usr/bin/tput setaf 1; echo "** Install development tools in local environment"; /usr/bin/tput sgr0
@@ -196,17 +196,17 @@ then
     # But currently, it seems that running cmake for 1 and then for 2 or 3
     # triggers a full rebuild
     
-    ~/Software/python_setup/bin/build_SimpleElastix.sh 2.7 || exit 1
-    ~/Software/python_setup/bin/build_SimpleElastix.sh 3.6 || exit 1
+    ../../python_setup/bin/build_SimpleElastix.sh 2.7 || exit 1
+    ../../python_setup/bin/build_SimpleElastix.sh 3.6 || exit 1
 
     # install SimpleElastix python wrappers
     source activate pysto_2.7 || exit 1
-    cd ~/Downloads/SimpleElastix/build_2.7/SimpleITK-build/Wrapping/Python/Packaging || exit 1
+    cd ../../python_setup/bin/SimpleElastix/build_2.7/SimpleITK-build/Wrapping/Python/Packaging || exit 1
     python setup.py --upgrade install || exit 1
     
     # install SimpleElastix python wrappers
     source activate pysto_3.6 || exit 1
-    cd ~/Downloads/SimpleElastix/build_3.6/SimpleITK-build/Wrapping/Python/Packaging || exit 1
+    cd ../../python_setup/bin/SimpleElastix/build_3.6/SimpleITK-build/Wrapping/Python/Packaging || exit 1
     python setup.py --upgrade install || exit 1
 
 else
